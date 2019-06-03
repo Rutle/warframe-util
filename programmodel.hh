@@ -7,6 +7,7 @@
 #include "prime.hh"
 #include <QJsonObject>
 #include <QVector>
+#include <QMap>
 
 namespace Program {
 enum DataCategories { All, BlueprintLocations, CetusBountyRewards,
@@ -21,18 +22,22 @@ class ProgramModel: public Interface::ProgramModelInterface
         void setReader(Interface::DataReaderInterface *reader);
         bool readData(QString &msg);
         const QVector<Data::Mod> &getMods();
-        bool searchMods(const QString &searchParameter,
-                        QVector<Data::Mod> &cont) const;
         std::shared_ptr<QVector<Data::Mod>> getModData() const;
     private:
-        void parseData(const DataCategories &cat = All);
+        void parseData();
+        bool checkKeys();
+        bool parseSelectedKeys(const QStringList &skeys);
         void addMods(const QJsonArray &arr);
         void addRelics(const QJsonArray &arr);
+
         Interface::DataReaderInterface *reader_;
         QJsonDocument fullData_;
+        QStringList dataKeys_;
+        QList<QString> selectedDataKeys_;
         QVector<Data::Mod> mods_;
         QVector<Data::Relic> relics_;
         QVector<Data::Prime> primes_;
+        QMap<QString, std::shared_ptr<Data::Prime> > primeLookUp_;
 
 };
 } // Program

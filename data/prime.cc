@@ -17,13 +17,19 @@ Program::Data::Prime::Prime(const QString &id, const QString &name,
 
 void Prime::addRelic(std::shared_ptr<Relic> relic, const double &chance, const QString &rarity)
 {
-    //relics_.append(relic);
-    info tmp;
-    tmp.chance_ = chance;
-    tmp.rarity_ = rarity;
-    auto pa = std::make_pair(relic, tmp);
-    relics_.append(pa);
+    relics_.append(RelicInfo(relic, chance, rarity));
 
 }
+
+bool Prime::operator==(const Prime &other) const
+{
+    if(this->getId()==(other.getId()))
+    {
+       return true;
+    }
+    return false;
+
+}
+
 } // Data
 } // Program

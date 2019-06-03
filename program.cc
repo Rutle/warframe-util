@@ -9,9 +9,6 @@ Program::Program():
     model_{nullptr}
 {
     mainUi_ = new MainWindow;
-
-
-
 }
 
 Program::~Program()
@@ -30,7 +27,7 @@ void Program::setUp()
 {
     QString msg{"Onnistu1."};
     if(!model_->readData(msg)) {
-        qDebug() << "Program message after: " << msg;
+        qDebug() << "Read data failed with message: " << msg;
     }
     mainUi_->setProgram(this);
     mainUi_->updateData();

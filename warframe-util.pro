@@ -34,7 +34,6 @@ SOURCES += \
         datareader.cc \
         main.cc \
         mainwindow.cc \
-        misc.cc \
         program.cc \
         programmodel.cc \
         widgets/modslistmodel.cc \
@@ -53,7 +52,6 @@ HEADERS += \
         interface/programinterface.hh \
         interface/programmodelinterface.hh \
         mainwindow.hh \
-        misc.hh \
         program.hh \
         programmodel.hh \
         widgets/modslistmodel.hh \

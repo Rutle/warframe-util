@@ -8,12 +8,7 @@ DataReader::DataReader()
 {
 
 }
-/*
-DataReader::~DataReader()
-{
 
-}
-*/
 bool DataReader::getData(QJsonDocument &data, QString &msg)
 {
     if(!readData(data, msg)) {

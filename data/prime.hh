@@ -17,14 +17,22 @@ class Prime : public DataEntity
         Prime(const QString &id, const QString &name, const ENTITY &type);
         void addRelic(std::shared_ptr<Relic> relic, const double &chance,
                       const QString &rarity);
+        bool operator==(const Prime& other) const;
     private:
         // < Relic ,< chance, rarity > >
-        struct info
+
+        struct RelicInfo
         {
+            RelicInfo() {relic_ = nullptr; chance_ = 0.0; rarity_ = "None";}
+            RelicInfo(std::shared_ptr<Relic> re, const double &ch,
+                      const QString &ra): relic_{re},
+                chance_{ch}, rarity_{ra}  {}
+            std::shared_ptr<Relic> relic_;
             double chance_;
             QString rarity_;
+
         };
-        QVector<std::pair<std::shared_ptr<Relic>, info>> relics_;
+        QVector<RelicInfo> relics_;
 
 };
 }

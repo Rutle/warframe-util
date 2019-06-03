@@ -1,6 +1,5 @@
 #include "programmodel.hh"
 #include "mod.hh"
-#include "misc.hh"
 #include "relic.hh"
 #include <QDebug>
 #include <QMap>
@@ -13,13 +12,17 @@ const QMap<DataCategories, QString> CATEGORIES = {
     {KeyRewards,"keyRewards"}, {MiscItems,"miscItems"},
     {MissionRewards,"missionRewards"}, {ModLocations,"modLocations"},
     {Relics,"relics"}, {SortieRewards,"sortieRewards"},
-    {TransientRewards,"transientRewards"}, {All,"all"},
+    {TransientRewards,"transientRewards"},
+};
+const QMap<QString, QString> SHORTHAND = {
+    {"modLocations", "Mods"}, {"relics", "Relics"},
 };
 
 ProgramModel::ProgramModel():
     reader_{nullptr}
 {
-
+    selectedDataKeys_.append("modLocations");
+    selectedDataKeys_.append("relics");
 }
 
 ProgramModel::~ProgramModel()
@@ -37,14 +40,23 @@ void ProgramModel::setReader(Interface::DataReaderInterface *reader)
 bool ProgramModel::readData(QString &msg)
 {
     if(!reader_->getData(fullData_, msg)) {
-        qDebug() << "ProgramModel message after: " << msg;
+        //qDebug() << "ProgramModel message after: " << msg;
         return false;
     }
-    qDebug() << "IsNull?: " << fullData_.isNull();
-    qDebug() << msg;
-    qDebug() << fullData_.object().keys();
-    parseData(ModLocations); // Where each mod drops (enemies only).
-    parseData(Relics); // Prime parts from relics.
+    //qDebug() << "IsNull?: " << fullData_.isNull();
+    //qDebug() << msg;
+    //qDebug() << fullData_.object().keys();
+    if(fullData_.isNull()) {
+        msg = "Data was not loaded.";
+        return false;
+    }
+    if(!checkKeys()) {
+        msg = "Key check failed.";
+        return false;
+    }
+    parseData();
+    //parseData(ModLocations); // Where each mod drops (enemies only).
+    //parseData(Relics); // Prime parts from relics.
 
     return true;
 }
@@ -54,25 +66,6 @@ const QVector<Data::Mod> &ProgramModel::getMods()
     return mods_;
 }
 
-bool ProgramModel::searchMods(const QString &searchString,
-                              QVector<Data::Mod> &data) const
-{
-    QVector<Data::Mod> tmp;
-    qDebug() << searchString;
-    for (auto mod : mods_) {
-        if(mod.getName().toLower().contains(searchString.toLower())) {
-            tmp.append(mod);
-            //qDebug() << mod.getName();
-        }
-
-    }
-    if(tmp.isEmpty()){
-        return false;
-    }
-    data = tmp;
-    return true;
-}
-
 std::shared_ptr<QVector<Data::Mod> > ProgramModel::getModData() const
 {
     return std::make_shared<QVector<Data::Mod>>(mods_);
@@ -80,30 +73,54 @@ std::shared_ptr<QVector<Data::Mod> > ProgramModel::getModData() const
 
 
 
-void ProgramModel::parseData(const DataCategories &cat)
+void ProgramModel::parseData()
 {
-    QString category{CATEGORIES.value(cat)};
-    qDebug() << category;
+    //QString category{CATEGORIES.value(cat)};
+    //qDebug() << category;
     //qDebug() << fullData_.object().size();
     // Do not use QJsonArray tmp{} <- brackets. Does not work properly.
 
     //qDebug() << tmpData.size();
     //qDebug() << tmpData.at(0).toObject().value("_id").toString();
     //qDebug() << tmpData.at(0).toObject().value("enemies").toArray().size();
-    QJsonArray tmpData = fullData_.object().value(category).toArray();
+    //QJsonArray tmpData = fullData_.object().value(category).toArray();
     // _id string of the first mod
-    if(cat == ModLocations) {
-        addMods(tmpData);
-    } else if (cat == Relics) {
-        addRelics(tmpData);
+    //selectedDataKeys_.contains();
+    if(selectedDataKeys_.contains(CATEGORIES.value(ModLocations))) {
+        qDebug() << "contains " << CATEGORIES.value(ModLocations);
+        addMods(fullData_.object().value(
+                    CATEGORIES.value(ModLocations)).toArray());
     }
+    if(selectedDataKeys_.contains(CATEGORIES.value(Relics))) {
+        qDebug() << "contains " << CATEGORIES.value(Relics);
+        addRelics(fullData_.object().value(
+                    CATEGORIES.value(Relics)).toArray());
+    }
+    //if(cat == ModLocations) {
+    //    addMods(tmpData);
+    //}
+    //if (cat == Relics) {
+    //    //addRelics(tmpData);
+    //}
     qDebug() << mods_.size();
+    qDebug() << primes_.size();
     //qDebug() << mods_.at(0).enemyCount();
 
 
     //qDebug() << tmp.value(CATEGORIES.value(cat)).toArray().at(0).toObject().value("modName").toString();
     //qDebug() <<
 
+}
+
+bool ProgramModel::checkKeys()
+{
+    QStringList keys{fullData_.object().keys()};
+    qDebug() << "keys: " << keys;
+    if(!keys.isEmpty()) {
+        dataKeys_ = keys;
+        return true;
+    }
+    return false;
 }
 
 void ProgramModel::addMods(const QJsonArray &arr)
@@ -141,19 +158,28 @@ void ProgramModel::addRelics(const QJsonArray &arr)
         QString relicId{item.toObject().value("_id").toString()};
         QString relicTier{item.toObject().value("tier").toString()};
         QJsonArray rewards = item.toObject().value("rewards").toArray();
-        Data::Relic tmp{relicId, relicName, Data::RelicType, relicTier};
+        Data::Relic tmpRelic{relicId, relicName, Data::RelicType, relicTier};
         for (auto prime : rewards) {
             QString primeId{prime.toObject().value("_id").toString()};
             QString primeName{prime.toObject().value("itemName").toString()};
-            double dropChance{prime.toObject().value("chance").toDouble()};
-            //int chance{enemy.toObject().value("chance").toInt()};
+            Data::Prime tmpPrime{primeId, primeName, Data::PrimeType};
+            int chance{prime.toObject().value("chance").toInt()};
             QString rarity{prime.toObject().value("rarity").toString()};
-            //Data::Relic tmpE{enemyId, enemyName, Data::EnemyType};
-            //tmpE.setStats(dropChance, rarity, chance);
-            //tmp.addEnemy(std::make_shared<Data::Enemy>(tmpE));
+            // Make a lookup table with map/hash based on Id for faster checking?
+
+            int idx{primes_.indexOf(tmpPrime)};
+            if(idx == -1) {
+                tmpPrime.addRelic(std::make_shared<Data::Relic>(tmpRelic),
+                                  chance, rarity);
+                primes_.append(tmpPrime);
+            } else {
+                primes_.value(idx).addRelic(std::make_shared<Data::Relic>(tmpRelic),
+                                            chance, rarity);
+                //qDebug() << primeId << " already existed.";
+            }
 
         }
-        //primes_.append(tmp);
+
     }
 }
 

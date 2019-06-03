@@ -18,8 +18,6 @@ class ProgramModelInterface {
 
         virtual const QVector<Data::Mod> &getMods() = 0;
 
-        virtual bool searchMods(const QString &searchParameter,
-                                 QVector<Data::Mod> &container) const = 0;
         virtual std::shared_ptr<QVector<Data::Mod>> getModData() const = 0;
 
 
