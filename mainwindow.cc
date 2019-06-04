@@ -1,6 +1,5 @@
 #include "mainwindow.hh"
 #include "ui_mainwindow.h"
-#include "modslistmodel.hh"
 #include "searchlistdelegate.hh"
 #include "searchproxymodel.hh"
 #include <QStandardItemModel>
@@ -20,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //QObject::connect(ui->catComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
     //                 ui->searchStackedWidget, &QStackedWidget::setCurrentIndex);
 
-
-
 }
 
 MainWindow::~MainWindow()
@@ -34,52 +31,57 @@ void MainWindow::setProgram(Program::Interface::ProgramInterface *program)
     program_ = program;
 }
 
-void MainWindow::searchText(const QString &text)
-{
 
-    //QAbstractItemModel *model = comboCats_.value(ui->catComboBox->currentText())->model();
-    //model->set
-    /*
-    QAbstractItemModel *model = comboCats_.value(ui->catComboBox->currentText())->model();
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, QVariant::fromValue(text), -1, Qt::MatchContains);
-    comboCats_.value(ui->catComboBox->currentText())->selectionModel()->clear();
-    foreach(QModelIndex modelIndex, list)
-        comboCats_.value(ui->catComboBox->currentText())->selectionModel()->select(modelIndex, QItemSelectionModel::Select);
-    // Käytä item delegatea piiloittamaan https://forum.qt.io/topic/87374/hide-an-item-delegate-in-a-listview/4
-    */
-}
-void MainWindow::updateData()
+void MainWindow::updateData() // fetchData
 {
-
     if(program_->getModel()->getModData() != nullptr) {
-        QListView *tmp{new QListView()};
-        Program::ModsListModel *model{new Program::ModsListModel(program_->getModel()->getModData(),
-                                                                 tmp)};
-        Program::SearchProxyModel *filterModel{new Program::SearchProxyModel(tmp)};
 
-        Program::SearchListDelegate *delegate{new Program::SearchListDelegate()};
+        for (auto cat : program_->getModel()->getSelectedCats()) {
+            //Program::SearchListDelegate *delegate{new Program::SearchListDelegate()};
+            if (cat == "Mods") {
+                QListView *tmp{new QListView()};
+                Program::SearchProxyModel *filterModel{new Program::SearchProxyModel(tmp)};
+                //std::make_shared<Program::SearchProxyModel>(filterModel);
+                //qDebug() << "Mods";
+                Program::SearchListModel *model{
+                    new Program::SearchListModel(
+                                program_->getModel()->getModData(), tmp)};
+                //catTOmodel_.insert("Mods", model);
+                ui->catComboBox->addItem("Mods");
+                filterModel->setSourceModel(model);
 
-        filterModel->setSourceModel(model);
-        tmp->setModel(filterModel);
-        tmp->setItemDelegate(delegate);
-        ui->searchStackedWidget->addWidget(tmp);
-        ui->catComboBox->addItem("Mods");
-        comboCats_.insert("Mods", filterModel);
-        QObject::connect(ui->searchEdit, &QLineEdit::textChanged,
-                                          [=](const QString &newValue){
-                             filterModel->setFilterRegExp(QRegExp(newValue));
-                             });
+                tmp->setModel(filterModel);
+                comboCats_.insert("Mods", filterModel);
+                searchListViews_.insert("Mods", tmp);
+                ui->searchStackedWidget->addWidget(searchListViews_.value("Mods"));
+            } else if(cat == "Primes") {
+                //qDebug() << "Primes";
+                QListView *tmp{new QListView()};
+                Program::SearchProxyModel *filterModel{new Program::SearchProxyModel(tmp)};
+                Program::SearchListModel *model{
+                    new Program::SearchListModel(
+                                program_->getModel()->getPrimeData(), tmp)};
+                //catTOmodel_.insert("Primes", model);
+                ui->catComboBox->addItem("Primes");
+                //qDebug() << "End primes";
+                filterModel->setSourceModel(model);
+                filterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+                tmp->setModel(filterModel);
+                comboCats_.insert("Primes", filterModel);
+                searchListViews_.insert("Primes", tmp);
+                ui->searchStackedWidget->addWidget(searchListViews_.value("Primes"));
+            }
+        }
+        setSignals();
+
     }
-    //Program::ModsListModel *model{new Program::ModsListModel(program_->getModel()->getModData(), ui->modListView)};
+    //Program::SearchListModel *model{new Program::SearchListModel(program_->getModel()->getModData(), ui->modListView)};
     //my_program::widgets::TopGamesListDelegate *delegate{new my_program::widgets::TopGamesListDelegate()};
     //ui->modListView->setModel(model);
     //topGamesList->setItemDelegate(delegate);
     //ui->modListView->setVisible(true);
     //topGamesList->setStyleSheet("QListView {background-color: transparent;}");
-    QObject::connect(ui->catComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-                     [=](const int &newValue){
-        ui->searchStackedWidget->setCurrentIndex(newValue);
-        });
+
     //QObject::disconnect(ui->searchEdit, &QLineEdit::textChanged,
     //                   nullptr, nullptr);
     //
@@ -91,5 +93,34 @@ void MainWindow::updateData()
 
 
     //updateSignal();
+}
+
+void MainWindow::setSignals()
+{
+    QObject::connect(ui->searchEdit, &QLineEdit::textChanged,
+                     [=](const QString &newValue){
+                         comboCats_.value("Mods")->setFilterRegExp(
+                                     QRegExp(newValue, Qt::CaseInsensitive));
+                         });
+
+    QObject::connect(ui->catComboBox,
+                     static_cast<void(QComboBox::*)(const QString &)>(
+                         &QComboBox::currentIndexChanged),
+                     [=](const QString &text1){
+        ui->searchStackedWidget->setCurrentIndex(
+                    ui->catComboBox->currentIndex());
+        ui->searchEdit->clear();
+
+        QObject::disconnect(ui->searchEdit, &QLineEdit::textChanged,
+                               nullptr, nullptr);
+
+        QObject::connect(ui->searchEdit, &QLineEdit::textChanged,
+                         [=](const QString &newValue){
+            comboCats_.value(text1)->setFilterRegExp(
+                        QRegExp(newValue, Qt::CaseInsensitive));
+
+        });
+
+    });
 }
 

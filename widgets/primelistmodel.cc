@@ -1,14 +1,14 @@
-#include "modslistmodel.hh"
-#include <QStandardItem>
+#include "primelistmodel.hh"
+
 namespace Program {
 
-ModsListModel::ModsListModel(std::shared_ptr<QVector<Data::Mod>> mods, QObject *parent):
+PrimeListModel::PrimeListModel(std::shared_ptr<QVector<Data::Prime>> prime, QObject *parent):
     QAbstractListModel(parent)
 {
-    mods_ = mods;
+    primes_ = prime;
 }
 
-QVariant ModsListModel::headerData(int section, Qt::Orientation orientation,
+QVariant PrimeListModel::headerData(int section, Qt::Orientation orientation,
                                    int role) const
 {
     if ( role != Qt::DisplayRole ) {
@@ -21,19 +21,19 @@ QVariant ModsListModel::headerData(int section, Qt::Orientation orientation,
     }
 }
 
-int ModsListModel::rowCount(const QModelIndex &parent) const
+int PrimeListModel::rowCount(const QModelIndex &parent) const
 {
-    return mods_->size();
+    return primes_->size();
 }
 
-QVariant ModsListModel::data(const QModelIndex &index, int role) const
+QVariant PrimeListModel::data(const QModelIndex &index, int role) const
 
 {
     if ( !index.isValid() ) {
         // qDebug() << "Data, Index: Invalid";
         return QVariant();
     }
-    if ( index.row() < 0 || index.row() >= mods_->size() ) {
+    if ( index.row() < 0 || index.row() >= primes_->size() ) {
         return QVariant();
     }
     if ( role == Qt::DisplayRole ) {
@@ -42,7 +42,8 @@ QVariant ModsListModel::data(const QModelIndex &index, int role) const
         //QString viewers_str{QString::number(mods_->at(index.row()))};
         //QString channels_str{QString::number(games_.at(index.row()).channels)};
         QStringList list;
-        list << mods_->at(index.row()).getName();
+        list << primes_->at(index.row()).getName();
+
         //list << viewers_str;
         //list << channels_str;
         return QVariant(list);

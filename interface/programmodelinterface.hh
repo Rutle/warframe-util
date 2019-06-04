@@ -3,6 +3,8 @@
 
 #include "datareaderinterface.hh"
 #include "mod.hh"
+#include "prime.hh"
+#include "dataentity.hh"
 #include <QStringList>
 namespace Program {
 namespace Interface {
@@ -16,9 +18,12 @@ class ProgramModelInterface {
 
         virtual bool readData(QString &msg) = 0;
 
-        virtual const QVector<Data::Mod> &getMods() = 0;
-
         virtual std::shared_ptr<QVector<Data::Mod>> getModData() const = 0;
+
+        virtual std::shared_ptr<QVector<Data::Prime>> getPrimeData() const = 0;
+
+        // Categories selected
+        virtual const QStringList& getSelectedCats() const = 0;
 
 
 };

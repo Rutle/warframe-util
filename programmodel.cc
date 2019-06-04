@@ -1,6 +1,7 @@
 #include "programmodel.hh"
 #include "mod.hh"
 #include "relic.hh"
+#include "dataentity.hh"
 #include <QDebug>
 #include <QMap>
 #include <QJsonArray>
@@ -14,15 +15,14 @@ const QMap<DataCategories, QString> CATEGORIES = {
     {Relics,"relics"}, {SortieRewards,"sortieRewards"},
     {TransientRewards,"transientRewards"},
 };
-const QMap<QString, QString> SHORTHAND = {
-    {"modLocations", "Mods"}, {"relics", "Relics"},
+const QMap<QString, QString> CATTOKEY = {
+    {"Mods", "modLocations"}, {"Primes", "relics"}
 };
-
 ProgramModel::ProgramModel():
     reader_{nullptr}
 {
-    selectedDataKeys_.append("modLocations");
-    selectedDataKeys_.append("relics");
+    selectedCats_ << "Mods";
+    selectedCats_ << "Primes";
 }
 
 ProgramModel::~ProgramModel()
@@ -43,9 +43,6 @@ bool ProgramModel::readData(QString &msg)
         //qDebug() << "ProgramModel message after: " << msg;
         return false;
     }
-    //qDebug() << "IsNull?: " << fullData_.isNull();
-    //qDebug() << msg;
-    //qDebug() << fullData_.object().keys();
     if(fullData_.isNull()) {
         msg = "Data was not loaded.";
         return false;
@@ -55,23 +52,26 @@ bool ProgramModel::readData(QString &msg)
         return false;
     }
     parseData();
-    //parseData(ModLocations); // Where each mod drops (enemies only).
-    //parseData(Relics); // Prime parts from relics.
-
     return true;
 }
 
-const QVector<Data::Mod> &ProgramModel::getMods()
-{
-    return mods_;
-}
-
-std::shared_ptr<QVector<Data::Mod> > ProgramModel::getModData() const
+std::shared_ptr<QVector<Data::Mod>> ProgramModel::getModData() const
 {
     return std::make_shared<QVector<Data::Mod>>(mods_);
 }
 
+std::shared_ptr<QVector<Data::Prime> > ProgramModel::getPrimeData() const
+{
+    qDebug() << "Primes: ";
+    qDebug() << primes_.at(0).getName();
+    qDebug() << primes_.size();
+    return std::make_shared<QVector<Data::Prime>>(primes_);
+}
 
+const QStringList &ProgramModel::getSelectedCats() const
+{
+    return selectedCats_;
+}
 
 void ProgramModel::parseData()
 {
@@ -86,29 +86,15 @@ void ProgramModel::parseData()
     //QJsonArray tmpData = fullData_.object().value(category).toArray();
     // _id string of the first mod
     //selectedDataKeys_.contains();
-    if(selectedDataKeys_.contains(CATEGORIES.value(ModLocations))) {
-        qDebug() << "contains " << CATEGORIES.value(ModLocations);
-        addMods(fullData_.object().value(
-                    CATEGORIES.value(ModLocations)).toArray());
+    if(selectedCats_.contains("Mods")) {
+        addMods(fullData_.object().value(CATTOKEY.value("Mods")).toArray());
     }
-    if(selectedDataKeys_.contains(CATEGORIES.value(Relics))) {
-        qDebug() << "contains " << CATEGORIES.value(Relics);
-        addRelics(fullData_.object().value(
-                    CATEGORIES.value(Relics)).toArray());
+    if(selectedCats_.contains("Primes")) {
+        addRelics(fullData_.object().value(CATTOKEY.value("Primes")).toArray());
     }
-    //if(cat == ModLocations) {
-    //    addMods(tmpData);
-    //}
-    //if (cat == Relics) {
-    //    //addRelics(tmpData);
-    //}
     qDebug() << mods_.size();
     qDebug() << primes_.size();
-    //qDebug() << mods_.at(0).enemyCount();
-
-
-    //qDebug() << tmp.value(CATEGORIES.value(cat)).toArray().at(0).toObject().value("modName").toString();
-    //qDebug() <<
+    qDebug() << primes_.at(0).getName();
 
 }
 
@@ -142,13 +128,6 @@ void ProgramModel::addMods(const QJsonArray &arr)
         }
         mods_.append(tmp);
     }
-
-    //sortMods(mods_);
-    //QVector<Data::Mod> test;
-    //if(searchMods("drift", test)) {
-    //    qDebug() << test.at(0).getName();
-    //}
-
 }
 
 void ProgramModel::addRelics(const QJsonArray &arr)

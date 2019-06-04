@@ -18,6 +18,9 @@ class Prime : public DataEntity
         void addRelic(std::shared_ptr<Relic> relic, const double &chance,
                       const QString &rarity);
         bool operator==(const Prime& other) const;
+        int getRelicCount() const;
+    protected:
+
     private:
         // < Relic ,< chance, rarity > >
 

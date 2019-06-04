@@ -36,8 +36,9 @@ SOURCES += \
         mainwindow.cc \
         program.cc \
         programmodel.cc \
-        widgets/modslistmodel.cc \
+        widgets/primelistmodel.cc \
         widgets/searchlistdelegate.cc \
+        widgets/searchlistmodel.cc \
         widgets/searchproxymodel.cc
 
 HEADERS += \
@@ -54,8 +55,9 @@ HEADERS += \
         mainwindow.hh \
         program.hh \
         programmodel.hh \
-        widgets/modslistmodel.hh \
+        widgets/primelistmodel.hh \
         widgets/searchlistdelegate.hh \
+        widgets/searchlistmodel.hh \
         widgets/searchproxymodel.hh
 
 FORMS += \

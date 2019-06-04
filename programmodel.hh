@@ -14,6 +14,7 @@ enum DataCategories { All, BlueprintLocations, CetusBountyRewards,
                       EnemyBlueprintTables, EnemyModTables,
                       KeyRewards, MiscItems, MissionRewards,
                       ModLocations, Relics, SortieRewards, TransientRewards };
+
 class ProgramModel: public Interface::ProgramModelInterface
 {
     public:
@@ -21,19 +22,21 @@ class ProgramModel: public Interface::ProgramModelInterface
         ~ProgramModel();
         void setReader(Interface::DataReaderInterface *reader);
         bool readData(QString &msg);
-        const QVector<Data::Mod> &getMods();
         std::shared_ptr<QVector<Data::Mod>> getModData() const;
+        std::shared_ptr<QVector<Data::Prime>> getPrimeData() const;
+        const QStringList &getSelectedCats() const;
     private:
         void parseData();
         bool checkKeys();
         bool parseSelectedKeys(const QStringList &skeys);
         void addMods(const QJsonArray &arr);
         void addRelics(const QJsonArray &arr);
-
+        void setSignals();
         Interface::DataReaderInterface *reader_;
+        // Settings *settings_;
         QJsonDocument fullData_;
         QStringList dataKeys_;
-        QList<QString> selectedDataKeys_;
+        QStringList selectedCats_;
         QVector<Data::Mod> mods_;
         QVector<Data::Relic> relics_;
         QVector<Data::Prime> primes_;

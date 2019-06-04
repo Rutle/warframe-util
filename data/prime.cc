@@ -31,5 +31,10 @@ bool Prime::operator==(const Prime &other) const
 
 }
 
+int Prime::getRelicCount() const
+{
+    return relics_.size();
+}
+
 } // Data
 } // Program

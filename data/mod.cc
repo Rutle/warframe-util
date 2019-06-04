@@ -18,12 +18,12 @@ bool Mod::addEnemy(std::shared_ptr<Enemy> item)
     enemies_.append(item);
     return true;
 }
-
+/*
 bool Mod::addLocation(std::shared_ptr<Location> item)
 {
 
 }
-
+*/
 
 int Mod::enemyCount() const
 {
