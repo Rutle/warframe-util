@@ -6,6 +6,7 @@
 
 #include "dataentity.hh"
 #include <QString>
+#include <QVariant>
 #include <QVector>
 #include <memory>
 
@@ -21,6 +22,7 @@ class Mod: public DataEntity
         bool addEnemy(std::shared_ptr<Enemy> item);
         //bool addLocation(std::shared_ptr<Location> item);
         int enemyCount() const;
+        QList<QVariant> getEnemies() const;
     protected:
 
     private:

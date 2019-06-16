@@ -53,9 +53,21 @@ void MainWindow::updateData() // fetchData
             filterModel->setSourceModel(model);
             filterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
             tmp->setModel(filterModel);
+            tmp->setSelectionMode(QAbstractItemView::SingleSelection);
             comboCats_.insert(cat, filterModel);
             searchListViews_.insert(cat, tmp);
             ui->searchStackedWidget->addWidget(searchListViews_.value(cat));
+            // Connect clicked/selected item signal to function to handle
+            // data display on right side of the QListView.
+            QObject::connect(tmp, &QListView::clicked,
+                             [=](const QModelIndex &index){
+                //QModelIndex itemIdx = searchListViews_.value(text1)->currentIndex();
+                QList<QVariant> tmp(index.data(Qt::UserRole).toList());
+                qDebug() << tmp.at(0).toStringList().at(0); // First enemy that drops the mod.
+
+
+
+            });
         }
         setSignals();
 
@@ -64,12 +76,16 @@ void MainWindow::updateData() // fetchData
 
 void MainWindow::setSignals()
 {
+    /*
+    // Connect signal from search field to filter slot on filter model.
     QObject::connect(ui->searchEdit, &QLineEdit::textChanged,
                      [=](const QString &newValue){
                          comboCats_.value("Mods")->setFilterRegExp(
                                      QRegExp(newValue, Qt::CaseInsensitive));
                          });
-
+                         */
+    // Connect combobox' selected text signal to switch the page on
+    // stacked widget to the selected category.
     QObject::connect(ui->catComboBox,
                      static_cast<void(QComboBox::*)(const QString &)>(
                          &QComboBox::currentIndexChanged),
@@ -77,16 +93,18 @@ void MainWindow::setSignals()
         ui->searchStackedWidget->setCurrentIndex(
                     ui->catComboBox->currentIndex());
         ui->searchEdit->clear();
-
+        // Reset the signal
         QObject::disconnect(ui->searchEdit, &QLineEdit::textChanged,
                                nullptr, nullptr);
-
+        // Connect the signal to correct filter model's slot.
         QObject::connect(ui->searchEdit, &QLineEdit::textChanged,
                          [=](const QString &newValue){
             comboCats_.value(text1)->setFilterRegExp(
                         QRegExp(newValue, Qt::CaseInsensitive));
 
         });
+
+
 
     });
 }

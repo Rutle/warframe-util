@@ -30,6 +30,15 @@ int Mod::enemyCount() const
     return enemies_.size();
 }
 
+QList<QVariant> Mod::getEnemies() const
+{
+    QList<QVariant> tmp;
+    for (auto enemy : enemies_) {
+        tmp.append(enemy->getData());
+    }
+    return tmp;
+}
+
 
 }   // Data
 }   // Program

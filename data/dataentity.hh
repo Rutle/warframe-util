@@ -20,6 +20,7 @@ class DataEntity
                    const QString &name,
                    const ENTITY &type);
         const QString &getId() const;
+        //const QString &getEntityName() const;
     private:
         QString id_;
         QString name_;

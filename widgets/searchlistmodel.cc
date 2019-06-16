@@ -1,4 +1,4 @@
-#include "SearchListModel.hh"
+#include "searchlistmodel.hh"
 #include <QStandardItem>
 #include <QDebug>
 namespace Program {
@@ -53,6 +53,29 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     */
+    switch (role) {
+        case Qt::DisplayRole: {
+            QStringList list;
+            if(type_ == "Mods") {
+                list << mods_->at(index.row()).getName();
+            } else if (type_ == "Primes") {
+                list << primes_->at(index.row()).getName();
+            }
+
+            //list << viewers_str;
+            //list << channels_str;
+            return QVariant(list);
+        }
+        case Qt::UserRole: {
+            if(type_ == "Mods") {
+                return QVariant(mods_->at(index.row()).getEnemies());
+            } else if (type_ == "Primes") {
+                return QVariant();
+            }
+        }
+
+    }
+    /*
     if ( role == Qt::DisplayRole ) {
         // Can return QStringList with name, viewers and channels.
         // qDebug() << "DisplayRole: " << role;
@@ -68,7 +91,7 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
         //list << viewers_str;
         //list << channels_str;
         return QVariant(list);
-    }
+    } */
     /*
     if ( role == Qt::DecorationRole ) {
         return QVariant(games_.at(index.row()).logo);
