@@ -50,19 +50,23 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="catComboBox"/>
+           <widget class="QComboBox" name="catComboBox">
+            <property name="maxCount">
+             <number>10</number>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="searchBtn">
             <property name="minimumSize">
              <size>
-              <width>100</width>
+              <width>75</width>
               <height>25</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>100</width>
+              <width>75</width>
               <height>30</height>
              </size>
             </property>
