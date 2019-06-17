@@ -120,7 +120,7 @@ void ProgramModel::addMods(const QJsonArray &arr)
             QString enemyId{enemy.toObject().value("_id").toString()};
             QString enemyName{enemy.toObject().value("enemyName").toString()};
             double dropChance{enemy.toObject().value("enemyModDropChance").toDouble()};
-            int chance{enemy.toObject().value("chance").toInt()};
+            double chance{enemy.toObject().value("chance").toDouble()};
             QString rarity{enemy.toObject().value("rarity").toString()};
             Data::Enemy tmpE{enemyId, enemyName, Data::EnemyType};
             tmpE.setStats(dropChance, rarity, chance);

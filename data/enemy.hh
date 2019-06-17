@@ -15,13 +15,13 @@ class Enemy: public DataEntity
         //const QString &getName() const;
         Enemy(const QString &id, const QString &name, const ENTITY &type);
         void setStats(const double &modDropChance, const QString &rarity,
-                      const int &chance);
+                      const double &chance);
         QVariant getData() const;
 
     private:
         double modDropChance_;
         QString rarity_;
-        int chance_;
+        double chance_;
         // Mods []
 };
 }   // Data

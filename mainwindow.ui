@@ -94,7 +94,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="resultHL">
           <item>
            <widget class="QStackedWidget" name="searchStackedWidget">
             <property name="minimumSize">
@@ -112,22 +112,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+           <widget class="QScrollArea" name="resultSA">
+            <property name="widgetResizable">
+             <bool>true</bool>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Sunken</enum>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
-              <widget class="QLabel" name="testLabel">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QWidget" name="scrollAreaWidgetContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>436</width>
+               <height>322</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formLayout"/>
+            </widget>
            </widget>
           </item>
          </layout>
