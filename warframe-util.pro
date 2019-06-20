@@ -27,10 +27,14 @@ CONFIG += c++11
 SOURCES += \
         Data/mod.cc \
         data/dataentity.cc \
+        data/drop.cc \
         data/enemy.cc \
-        data/location.cc \
+        data/misc.cc \
+        data/mission.cc \
         data/prime.cc \
         data/relic.cc \
+        data/relicsource.cc \
+        data/source.cc \
         datareader.cc \
         main.cc \
         mainwindow.cc \
@@ -44,10 +48,15 @@ SOURCES += \
 HEADERS += \
         Data/dataentity.hh \
         Data/mod.hh \
+        data/drop.hh \
         data/enemy.hh \
-        data/location.hh \
+        data/misc.hh \
+        data/mission.hh \
         data/prime.hh \
         data/relic.hh \
+        data/relicsource.hh \
+        data/source.hh \
+        data/types.hh \
         datareader.hh \
         interface/datareaderinterface.hh \
         interface/programinterface.hh \

@@ -2,9 +2,9 @@
 #define MOD_HH
 
 #include "enemy.hh"
-//#include "location.hh"
+#include "types.hh"
+#include "drop.hh"
 
-#include "dataentity.hh"
 #include <QString>
 #include <QVariant>
 #include <QVector>
@@ -13,21 +13,21 @@
 namespace Program {
 namespace Data {
 
-class Mod: public DataEntity
+class Mod: public Drop
 {
     public:
         Mod();
-        //~Mod();
         Mod(const QString &id, const QString &name, const ENTITY &type);
         bool addEnemy(std::shared_ptr<Enemy> item);
-        //bool addLocation(std::shared_ptr<Location> item);
+        void addSource(std::shared_ptr<Source> loc, ENTITY type);
         int enemyCount() const;
-        QList<QVariant> getEnemies() const;
+        QList<QVariant> getSources() const;
+        QStringList getDetails() const;
     protected:
 
     private:
         QVector<std::shared_ptr<Enemy>> enemies_;
-        //QVector<std::shared_ptr<Location>> mission_;
+        //QVector<std::shared_ptr<Source>> missions_;
 
 };
 }   // Data

@@ -1,13 +1,14 @@
 #ifndef ENEMY_HH
 #define ENEMY_HH
 
-#include "dataentity.hh"
+#include "source.hh"
+#include "types.hh"
 #include <QStringList>
 #include <QVariant>
 namespace Program {
 namespace Data {
 
-class Enemy: public DataEntity
+class Enemy : public Source
 {
     public:
         Enemy();

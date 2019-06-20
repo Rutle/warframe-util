@@ -6,8 +6,7 @@ Enemy::Enemy()
 
 }
 
-Enemy::Enemy(const QString &id, const QString &name, const ENTITY &type):
-    DataEntity (id, name, type)
+Enemy::Enemy(const QString &id, const QString &name, const ENTITY &type)
 {
 
 }

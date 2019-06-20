@@ -8,15 +8,15 @@
 namespace Program {
 
 const QMap<DataCategories, QString> CATEGORIES = {
-    {BlueprintLocations,"blueprintLocations"}, {CetusBountyRewards,"cetusBountyRewards"},
+    {BlueprintSources,"blueprintSources"}, {CetusBountyRewards,"cetusBountyRewards"},
     {EnemyBlueprintTables,"enemyBlueprintTables"}, {EnemyModTables,"enemyModTables"},
     {KeyRewards,"keyRewards"}, {MiscItems,"miscItems"},
-    {MissionRewards,"missionRewards"}, {ModLocations,"modLocations"},
+    {MissionRewards,"missionRewards"}, {ModSources,"modSources"},
     {Relics,"relics"}, {SortieRewards,"sortieRewards"},
     {TransientRewards,"transientRewards"},
 };
 const QMap<QString, QString> CATTOKEY = {
-    {"Mods", "modLocations"}, {"Primes", "relics"}
+    {"Mods", "modSources"}, {"Primes", "relics"}
 };
 ProgramModel::ProgramModel():
     reader_{nullptr}
@@ -60,12 +60,12 @@ std::shared_ptr<QVector<Data::Mod>> ProgramModel::getModData() const
     return std::make_shared<QVector<Data::Mod>>(mods_);
 }
 
-std::shared_ptr<QVector<Data::Prime> > ProgramModel::getPrimeData() const
+std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> ProgramModel::getPrimeData() const
 {
     qDebug() << "Primes: ";
-    qDebug() << primes_.at(0).getName();
+    qDebug() << primes_.at(0)->getName();
     qDebug() << primes_.size();
-    return std::make_shared<QVector<Data::Prime>>(primes_);
+    return std::make_shared<QVector<std::shared_ptr<Data::Prime>>>(primes_);
 }
 
 const QStringList &ProgramModel::getSelectedCats() const
@@ -92,9 +92,11 @@ void ProgramModel::parseData()
     if(selectedCats_.contains("Primes")) {
         addRelics(fullData_.object().value(CATTOKEY.value("Primes")).toArray());
     }
+    //Data::Prime *tmp = new Data::Prime;
+    //tmp->
     qDebug() << mods_.size();
     qDebug() << primes_.size();
-    qDebug() << primes_.at(0).getName();
+    qDebug() << primes_.at(0)->getName();
 
 }
 
@@ -133,33 +135,51 @@ void ProgramModel::addMods(const QJsonArray &arr)
 void ProgramModel::addRelics(const QJsonArray &arr)
 {
     for (auto item : arr) {
-        QString relicName{item.toObject().value("relicName").toString()};
-        QString relicId{item.toObject().value("_id").toString()};
-        QString relicTier{item.toObject().value("tier").toString()};
-        QJsonArray rewards = item.toObject().value("rewards").toArray();
-        Data::Relic tmpRelic{relicId, relicName, Data::RelicType, relicTier};
-        for (auto prime : rewards) {
-            QString primeId{prime.toObject().value("_id").toString()};
-            QString primeName{prime.toObject().value("itemName").toString()};
-            Data::Prime tmpPrime{primeId, primeName, Data::PrimeType};
-            int chance{prime.toObject().value("chance").toInt()};
-            QString rarity{prime.toObject().value("rarity").toString()};
-            // Make a lookup table with map/hash based on Id for faster checking?
+        QString state{item.toObject().value("state").toString()};
+        if (state == "Intact") {
+            QString relicName{item.toObject().value("relicName").toString()};
+            QString relicId{item.toObject().value("_id").toString()};
+            QString relicTier{item.toObject().value("tier").toString()};
+            QJsonArray rewards = item.toObject().value("rewards").toArray();
 
-            int idx{primes_.indexOf(tmpPrime)};
-            if(idx == -1) {
-                tmpPrime.addRelic(std::make_shared<Data::Relic>(tmpRelic),
-                                  chance, rarity);
-                primes_.append(tmpPrime);
-            } else {
-                primes_.value(idx).addRelic(std::make_shared<Data::Relic>(tmpRelic),
-                                            chance, rarity);
-                //qDebug() << primeId << " already existed.";
+            auto tmpRelic{std::make_shared<Data::Relic>(relicId, relicName, Data::RelicType, relicTier)};
+            relics_.append(tmpRelic);
+            for (auto prime : rewards) {
+                QString primeId{prime.toObject().value("_id").toString()};
+                QString primeName{prime.toObject().value("itemName").toString()};
+                auto tmpPrime{std::make_shared<Data::Prime>(primeId, primeName, Data::PrimeType)};
+                int chance{prime.toObject().value("chance").toInt()};
+                QString rarity{prime.toObject().value("rarity").toString()};
+                // Make a lookup table with map/hash based on Id for faster checking?
+                if (!primeLookUp_.contains(primeId)) {
+                    tmpPrime->addRelic(tmpRelic, chance, rarity);
+                    primeLookUp_.insert(primeId, tmpPrime);
+                    primes_.append(tmpPrime);
+
+                } else {
+                    primeLookUp_[primeId]->addRelic(tmpRelic, chance, rarity);
+                    qDebug() << "Exists already: "  << primeLookUp_.value(primeId)->getRelicCount();
+                }
+                /*
+                int idx{primes_.indexOf(tmpPrime)};
+                if(idx == -1) {
+                    tmpPrime.addRelic(std::make_shared<Data::Relic>(tmpRelic),
+                                      chance, rarity);
+                    primes_.append(tmpPrime);
+                } else {
+                    primes_.value(idx).addRelic(std::make_shared<Data::Relic>(tmpRelic),
+                                                chance, rarity);
+                    qDebug() << primes_.value(idx).getRelicCount();
+                    qDebug() << primeId << " already existed.";
+                }*/
+
             }
-
         }
 
+
     }
+    qDebug() << "eka " << primes_.at(0)->getName() << " " << primes_.at(0)->getRelicCount();
+    qDebug() << "eka " << primeLookUp_.value("6733cc5298452209aa29dd72027c7df1")->getName() << " " << primeLookUp_.value("6733cc5298452209aa29dd72027c7df1")->getRelicCount();
 }
 
 

@@ -10,7 +10,7 @@ SearchListModel::SearchListModel(std::shared_ptr<QVector<Data::Mod>> mods, QObje
     type_ = "Mods";
 }
 
-SearchListModel::SearchListModel(std::shared_ptr<QVector<Data::Prime>> primes, QObject *parent):
+SearchListModel::SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> primes, QObject *parent):
     QAbstractListModel(parent), mods_{nullptr}
 {
     primes_ = primes;
@@ -59,7 +59,7 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
             if(type_ == "Mods") {
                 list << mods_->at(index.row()).getName();
             } else if (type_ == "Primes") {
-                list << primes_->at(index.row()).getName();
+                list << primes_->at(index.row())->getName();
             }
 
             //list << viewers_str;
@@ -70,7 +70,7 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
             if(type_ == "Mods") {
                 return QVariant(mods_->at(index.row()).getEnemies());
             } else if (type_ == "Primes") {
-                return QVariant();
+                return QVariant(primes_->at(index.row())->getRelics());
             }
         }
 

@@ -18,6 +18,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    resultModel_ = new QStandardItemModel(0, 3, this);
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setDynamicSortFilter(true);
+    resultModel_->setHeaderData(0, Qt::Horizontal, tr("Drop Source:"));
+    resultModel_->setHeaderData(1, Qt::Horizontal, tr("Drop Chance:"));
+    resultModel_->setHeaderData(2, Qt::Horizontal, tr("Rarity:"));
+    proxy->setSourceModel(resultModel_);
+    ui->resultView->setModel(proxy);
+    ui->resultView->setSortingEnabled(true);
+    ui->resultView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     //QObject::connect(ui->catComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
     //                 ui->searchStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -63,7 +73,7 @@ void MainWindow::updateData() // fetchData
             // Connect clicked/selected item signal to function to handle
             // data display on right side of the QListView.
             QObject::connect(tmp, &QListView::clicked,
-                             this, &MainWindow::displaySelectedTest);
+                             this, &MainWindow::displaySelected);
             /*
             QObject::connect(tmp, &QListView::clicked,
                              [=](const QModelIndex &index){
@@ -84,14 +94,40 @@ void MainWindow::displaySelected(const QModelIndex &index)
 {
     QList<QVariant> tmp(index.data(Qt::UserRole).toList());
     qDebug() << tmp.at(0).toStringList().at(0); // First enemy that drops the mod.
+    qDebug() << tmp.size();
     // Instead of using layout I could take advantage of QListView here and
     // add sorting etc.
+
+    resultModel_->removeRows(0, resultModel_->rowCount(QModelIndex()), QModelIndex());
+
+    //resultModel_->insertRows()
+    resultModel_->setHeaderData(0, Qt::Horizontal, tr("Drop Source:"));
+    resultModel_->setHeaderData(1, Qt::Horizontal, tr("Drop Chance:"));
+    resultModel_->setHeaderData(2, Qt::Horizontal, tr("Rarity:"));
+    //resultModel_->setHeaderData(0, Qt::Horizontal, tr("Rarity"));
+
+    for (int idx = 0; idx < tmp.size(); ++idx) {
+        resultModel_->insertRow(idx);
+        QStringList sl{tmp.at(idx).toStringList()};
+        qDebug() << sl;
+        resultModel_->setData(resultModel_->index(idx, 0, QModelIndex()), sl.at(0));
+        resultModel_->setData(resultModel_->index(idx, 1, QModelIndex()), sl.at(1));
+        resultModel_->setData(resultModel_->index(idx, 2, QModelIndex()), sl.at(2));
+        //resultModel_->setData(resultModel_->index(idx+1, 3, QModelIndex()), sl.at(3));
+
+    }
+    qDebug() << resultModel_->rowCount();
+    ui->resultView->horizontalHeader()->setStretchLastSection(true);
+    ui->resultView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+
+    /*
     QWidget *baseWidget{new QWidget};
     QVBoxLayout *baseLayout{new QVBoxLayout};
     if (ui->catComboBox->currentText() == "Mods") {
         //QScrollArea *baseScrollArea{new QScrollArea};
         QGridLayout *labelLayout{new QGridLayout};
-        QLabel *drop{new QLabel("Drop Location:")};
+        QLabel *drop{new QLabel("Drop Source:")};
         drop->setContentsMargins(0, 0, 0, 5);
         QLabel *chance{new QLabel("Drop Chance:")};
         chance->setContentsMargins(0, 0, 0, 5);
@@ -138,15 +174,7 @@ void MainWindow::displaySelected(const QModelIndex &index)
             labelLayout->addWidget(chance, idx+2, 1);
             labelLayout->addWidget(rarity, idx+2, 2);
         }
-        /*
-        for (auto data : tmp) {
-            qDebug() << data;
-            QStringList sl{data.toStringList()};
-            QLabel *eka{new QLabel(sl.at(0))};
-            QLabel *toka{new QLabel(sl.at(1))};
-            baseFormLayout->addWidget(eka);
-            baseFormLayout->addWidget(toka);
-        }*/
+
         QWidget *formWidget{new QWidget};
         formWidget->setLayout(labelLayout);
         baseLayout->addWidget(formWidget);
@@ -169,18 +197,29 @@ void MainWindow::displaySelected(const QModelIndex &index)
         tt->deleteLater();
         ui->resultSA->setWidget(baseWidget);
         //ui->resultHL->insertWidget(1, baseScrollArea);
+    } else if (ui->catComboBox->currentText() == "Primes") {
+
+        resultModel_->removeRows(0, resultModel_->rowCount(QModelIndex()), QModelIndex());
+        //resultModel_->insertRows()
+        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
+        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Tier"));
+        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Chance"));
+        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Rarity"));
+
+        for (int idx = 0; idx < tmp.size(); ++idx) {
+            QStringList sl{tmp.at(idx).toStringList()};
+            qDebug() << sl;
+            resultModel_->setData(resultModel_->index(idx+1, 0, QModelIndex()), sl.at(0));
+            resultModel_->setData(resultModel_->index(idx+1, 1, QModelIndex()), sl.at(1));
+            resultModel_->setData(resultModel_->index(idx+1, 2, QModelIndex()), sl.at(2));
+            resultModel_->setData(resultModel_->index(idx+1, 3, QModelIndex()), sl.at(3));
+
+        }
+        QWidget *tt{ui->resultSA->takeWidget()};
+        tt->deleteLater();
+        ui->resultSA->setWidget(resultView_);
     }
-
-}
-
-void MainWindow::displaySelectedTest(const QModelIndex &index)
-{
-    QWidget *tt{ui->resultSA->takeWidget()};
-    tt->deleteLater();
-
-    QWidget *baseWidget{new QWidget};
-    QVBoxLayout *baseLayout{new QVBoxLayout};
-    index.model();
+    */
 }
 
 void MainWindow::setSignals()

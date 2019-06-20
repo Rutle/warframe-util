@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QMap>
 #include <QListView>
+#include <QTableView>
 #include <QStandardItemModel>
 
 namespace Ui {
@@ -25,7 +26,6 @@ class MainWindow : public QMainWindow
         void updateData();
 
         void displaySelected(const QModelIndex &index);
-        void displaySelectedTest(const QModelIndex &index);
 
     private:
 
@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow
         QMap<QString, Program::SearchProxyModel *> comboCats_;
         //QMap<QString, Program::SearchListModel *> catTOmodel_;
         QStandardItemModel *resultModel_;
+        //QTableView *resultView_;
         // https://doc.qt.io/qt-5/qtwidgets-itemviews-chart-mainwindow-cpp.html
         // for QTableModel
 };

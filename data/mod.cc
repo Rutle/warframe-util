@@ -19,7 +19,7 @@ bool Mod::addEnemy(std::shared_ptr<Enemy> item)
     return true;
 }
 /*
-bool Mod::addLocation(std::shared_ptr<Location> item)
+bool Mod::addSource(std::shared_ptr<Source> item)
 {
 
 }

@@ -20,7 +20,7 @@ class ProgramModelInterface {
 
         virtual std::shared_ptr<QVector<Data::Mod>> getModData() const = 0;
 
-        virtual std::shared_ptr<QVector<Data::Prime>> getPrimeData() const = 0;
+        virtual std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> getPrimeData() const = 0;
 
         // Categories selected
         virtual const QStringList& getSelectedCats() const = 0;

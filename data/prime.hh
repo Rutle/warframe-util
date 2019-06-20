@@ -1,41 +1,41 @@
 #ifndef PRIME_HH
 #define PRIME_HH
 
-#include "relic.hh"
-#include "dataentity.hh"
+#include "types.hh"
+#include "drop.hh"
 #include <memory>
 #include <QVector>
+#include <QVariant>
 
 
 namespace Program {
 namespace Data {
 
-class Prime : public DataEntity
+class Prime: public Drop
 {
     public:
         Prime();
-        Prime(const QString &id, const QString &name, const ENTITY &type);
-        void addRelic(std::shared_ptr<Relic> relic, const double &chance,
-                      const QString &rarity);
-        bool operator==(const Prime& other) const;
+        void addSource(std::shared_ptr<Source> loc, ENTITY type);
         int getRelicCount() const;
+        QList<QVariant> getSources() const;
+        QStringList getDetails() const;
     protected:
 
     private:
-        // < Relic ,< chance, rarity > >
-
         struct RelicInfo
         {
-            RelicInfo() {relic_ = nullptr; chance_ = 0.0; rarity_ = "None";}
-            RelicInfo(std::shared_ptr<Relic> re, const double &ch,
-                      const QString &ra): relic_{re},
+            RelicInfo() {chance_ = 0.0; rarity_ = "None";}
+            RelicInfo(const QString &ch, const QString &ra):
                 chance_{ch}, rarity_{ra}  {}
-            std::shared_ptr<Relic> relic_;
-            double chance_;
+            QString chance_;
             QString rarity_;
+            QString id_;
+            QString name_;
+            QString tier_;
 
         };
-        QVector<RelicInfo> relics_;
+        //QVector<RelicInfo> relics_;
+        QVector<Data::Source> relics_;
 
 };
 }

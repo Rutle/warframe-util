@@ -1,8 +1,8 @@
-#include "location.hh"
+#include "source.hh"
 namespace Program {
 namespace Data {
 
-Location::Location()
+Source::Source()
 {
 
 }

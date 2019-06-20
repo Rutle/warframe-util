@@ -1,12 +1,14 @@
 #ifndef DATAENTITY_HH
 #define DATAENTITY_HH
 
+
 #include <QString>
+#include "enemy.hh"
+#include "Sourceh"
+#include "prime.hh"
+#include "mod.hh"
 namespace Program {
 namespace Data {
-
-enum ENTITY { Undefined, EnemyType, ModType, LocationType, RelicType,
-              PrimeType };
 
 class DataEntity
 {
@@ -15,16 +17,26 @@ class DataEntity
         //virtual ~DataEntity();
         const QString &getName() const;
         const ENTITY &getType() const;
-    protected:
-        DataEntity(const QString &id,
-                   const QString &name,
-                   const ENTITY &type);
         const QString &getId() const;
-        //const QString &getEntityName() const;
+        void setDrop(std::shared_ptr<Drop> drop);
+        bool addEnemySource(std::shared_ptr<Source> loc);
+        bool addMissionSource();
+        bool addRelicSource();
+        const QVector<std::shared_ptr<Source>> &getData(ENTITY type) const;
+    protected:
+
     private:
         QString id_;
         QString name_;
         ENTITY type_;
+
+        std::shared_ptr<Drop> drop_;
+        std::shared_ptr<Source> missions_;
+        std::shared_ptr<Source> relics_;
+        std::shared_ptr<Source> enemies_;
+
+
+
 
 };
 }   // Data

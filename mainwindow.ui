@@ -112,22 +112,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QScrollArea" name="resultSA">
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>436</width>
-               <height>322</height>
-              </rect>
-             </property>
-             <layout class="QFormLayout" name="formLayout"/>
-            </widget>
-           </widget>
+           <widget class="QTableView" name="resultView"/>
           </item>
          </layout>
         </item>

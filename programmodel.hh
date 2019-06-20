@@ -10,10 +10,10 @@
 #include <QMap>
 
 namespace Program {
-enum DataCategories { All, BlueprintLocations, CetusBountyRewards,
+enum DataCategories { All, BlueprintSources, CetusBountyRewards,
                       EnemyBlueprintTables, EnemyModTables,
                       KeyRewards, MiscItems, MissionRewards,
-                      ModLocations, Relics, SortieRewards, TransientRewards };
+                      ModSources, Relics, SortieRewards, TransientRewards };
 
 class ProgramModel: public Interface::ProgramModelInterface
 {
@@ -23,7 +23,7 @@ class ProgramModel: public Interface::ProgramModelInterface
         void setReader(Interface::DataReaderInterface *reader);
         bool readData(QString &msg);
         std::shared_ptr<QVector<Data::Mod>> getModData() const;
-        std::shared_ptr<QVector<Data::Prime>> getPrimeData() const;
+        std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> getPrimeData() const;
         const QStringList &getSelectedCats() const;
     private:
         void parseData();
@@ -38,9 +38,12 @@ class ProgramModel: public Interface::ProgramModelInterface
         QStringList dataKeys_;
         QStringList selectedCats_;
         QVector<Data::Mod> mods_;
-        QVector<Data::Relic> relics_;
-        QVector<Data::Prime> primes_;
-        QMap<QString, std::shared_ptr<Data::Prime> > primeLookUp_;
+        QVector<std::shared_ptr<Data::Relic>> relics_;
+        QVector<std::shared_ptr<Data::Prime> > primes_;
+        QVector<std::shared_ptr<Data::DataEntity>> data_;
+        QMap<QString, std::shared_ptr<Data::Prime>> primeLookUp_;
+
+
 
 };
 } // Program
