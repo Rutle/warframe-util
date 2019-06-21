@@ -1,8 +1,9 @@
 #ifndef SEARCHLISTMODEL_HH
 #define SEARCHLISTMODEL_HH
 
-#include "mod.hh"
-#include "prime.hh"
+//#include "mod.hh"
+//#include "prime.hh"
+#include "drop.hh"
 #include <QAbstractListModel>
 
 namespace Program {
@@ -12,9 +13,13 @@ class SearchListModel : public QAbstractListModel
 {
         Q_OBJECT
     public:
+        /*
         SearchListModel(std::shared_ptr<QVector<Data::Mod>> mods,
                       QObject *parent = nullptr);
         SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> primes,
+                      QObject *parent = nullptr);
+        */
+        SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::Drop>>> primes,
                       QObject *parent = nullptr);
         // Header:
         QVariant headerData(int section, Qt::Orientation orientation,
@@ -27,8 +32,9 @@ class SearchListModel : public QAbstractListModel
                       int role = Qt::DisplayRole ) const;
     private:
         QString type_;
-        std::shared_ptr<QVector<Data::Mod>> mods_;
-        std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> primes_;
+        //std::shared_ptr<QVector<Data::Mod>> mods_;
+        //std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> primes_;
+        std::shared_ptr<QVector<std::shared_ptr<Data::Drop>>> drops_;
 };
 }
 #endif // SearchListModel_HH

@@ -12,17 +12,21 @@ class Enemy : public Source
 {
     public:
         Enemy();
-        //~Enemy();
-        //const QString &getName() const;
-        Enemy(const QString &id, const QString &name, const ENTITY &type);
-        void setStats(const double &modDropChance, const QString &rarity,
-                      const double &chance);
-        QVariant getData() const;
+        Enemy(const QString &id, const QString &name, const SOURCETYPE &type,
+              const QString &modDropC, const QString &rarity,
+              const QString &chance);
+        QVariant getData();
+        const QString &getName() const;
+        const DROPTYPE &getType() const;
+        const QString &getId() const;
 
     private:
-        double modDropChance_;
+        QString id_;
+        QString name_;
+        SOURCETYPE type_;
+        QString modDropChance_;
         QString rarity_;
-        double chance_;
+        QString chance_;
         // Mods []
 };
 }   // Data

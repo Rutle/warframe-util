@@ -3,6 +3,8 @@
 
 #include "types.hh"
 #include "drop.hh"
+#include "source.hh"
+//#include "relicsource.hh"
 #include <memory>
 #include <QVector>
 #include <QVariant>
@@ -15,13 +17,19 @@ class Prime: public Drop
 {
     public:
         Prime();
-        void addSource(std::shared_ptr<Source> loc, ENTITY type);
-        int getRelicCount() const;
-        QList<QVariant> getSources() const;
+        Prime(const QString &id, const QString &name, const DROPTYPE &type);
+        bool addSource(std::shared_ptr<Source> loc, SOURCETYPE type);
+        QList<QVariant> getSources(SOURCETYPE type);
         QStringList getDetails() const;
-    protected:
+        int getSourceCount(SOURCETYPE type) const;
+        const QString &getName() const;
+        const DROPTYPE &getType() const;
+        const QString &getId() const;
 
     private:
+        QString id_;
+        QString name_;
+        DROPTYPE type_;
         struct RelicInfo
         {
             RelicInfo() {chance_ = 0.0; rarity_ = "None";}
@@ -35,7 +43,7 @@ class Prime: public Drop
 
         };
         //QVector<RelicInfo> relics_;
-        QVector<Data::Source> relics_;
+        QVector<std::shared_ptr<Data::Source>> relics_;
 
 };
 }

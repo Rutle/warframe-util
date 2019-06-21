@@ -7,6 +7,7 @@
 #include "mainwindow.hh"
 
 namespace Program {
+
 class Program: public Interface::ProgramInterface
 {
     public:

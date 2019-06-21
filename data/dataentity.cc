@@ -16,16 +16,11 @@ const QString &DataEntity::getName() const
     return name_;
 }
 
-const ENTITY &DataEntity::getType() const
+const DROPTYPE &DataEntity::getType() const
 {
     return type_;
 }
 
-DataEntity::DataEntity(const QString &id, const QString &name,
-                       const ENTITY &type): id_{id}, name_{name},
-    type_{type}
-{
 
-}
 }   // Data
 }   // Program

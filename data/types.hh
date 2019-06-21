@@ -3,9 +3,10 @@
 
 namespace Program {
 namespace Data {
-enum ENTITY { Undefined, EnemyType, ModType, MissionType, RelicType,
-              PrimeType, MiscType };
-enum SOURCETYPE {};
+
+enum class DROPTYPE { UNDEFINED, MODDROP, RELICDROP, PRIMEDROP, MISCDROP };
+
+enum class SOURCETYPE { UNDEFINED, ALLSOURCE, MISSIONSOURCE, ENEMYSOURCE, RELICSOURCE };
 }
 }
 #endif // TYPES_HH

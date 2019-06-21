@@ -4,7 +4,7 @@
 
 #include <QString>
 #include "enemy.hh"
-#include "Sourceh"
+#include "source.hh"
 #include "prime.hh"
 #include "mod.hh"
 namespace Program {
@@ -16,19 +16,17 @@ class DataEntity
         DataEntity();
         //virtual ~DataEntity();
         const QString &getName() const;
-        const ENTITY &getType() const;
+        const DROPTYPE &getType() const;
         const QString &getId() const;
         void setDrop(std::shared_ptr<Drop> drop);
         bool addEnemySource(std::shared_ptr<Source> loc);
         bool addMissionSource();
         bool addRelicSource();
-        const QVector<std::shared_ptr<Source>> &getData(ENTITY type) const;
-    protected:
-
+        const QVector<std::shared_ptr<Source>> &getData(SOURCETYPE type) const;
     private:
         QString id_;
         QString name_;
-        ENTITY type_;
+        DROPTYPE type_;
 
         std::shared_ptr<Drop> drop_;
         std::shared_ptr<Source> missions_;

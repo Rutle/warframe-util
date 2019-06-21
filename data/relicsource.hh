@@ -14,14 +14,18 @@ class RelicSource: public Source
         RelicSource();
         RelicSource(const QString &chance_, const QString &rarity,
                     const QString &id, const QString &name,
-                    const QString &tier);
-        QVariant getData() const;
+                    const QString &tier, SOURCETYPE type);
+        QVariant getData();
+        const QString &getName() const;
+        const DROPTYPE &getType() const;
+        const QString &getId() const;
     private:
         QString chance_;
         QString rarity_;
         QString id_;
         QString name_;
         QString tier_;
+        SOURCETYPE type_;
 };
 }
 }

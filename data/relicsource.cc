@@ -6,15 +6,16 @@ RelicSource::RelicSource()
 
 }
 
-Data::RelicSource::RelicSource(const QString &ch, const QString &rarity,
+RelicSource::RelicSource(const QString &ch, const QString &rarity,
                                const QString &id, const QString &name,
-                               const QString &tier):
-    chance_{ch}, rarity_{rarity}, id_{id}, name_{name}, tier_{tier}
+                               const QString &tier, SOURCETYPE type):
+    chance_{ch}, rarity_{rarity}, id_{id}, name_{name}, tier_{tier},
+    type_{type}
 {
 
 }
 
-QVariant RelicSource::getData() const
+QVariant RelicSource::getData()
 {
     QStringList tmp;
     tmp << name_;

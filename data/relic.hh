@@ -15,19 +15,22 @@ class Relic: public Drop
     public:
 
         Relic();
-        Relic(const QString &id, const QString &name, const ENTITY &type,
+        Relic(const QString &id, const QString &name, const DROPTYPE &type,
               const QString &tier);
-        QList<QVariant> getSources() const;
-        void addSource(std::shared_ptr<Source> loc, ENTITY type);
+        QList<QVariant> getSources(SOURCETYPE type);
+        bool addSource(std::shared_ptr<Source> loc, SOURCETYPE type);
         QStringList getDetails() const;
-        //QVariant getData() const;
+        int getSourceCount(SOURCETYPE type) const;
+        const QString &getName() const;
+        const DROPTYPE &getType() const;
+        const QString &getId() const;
     private:
         QString id_;
         QString name_;
-        ENTITY type_;
+        DROPTYPE type_;
         QString tier_;
 
-        QVector<std::shared_ptr<Source>> missions_;
+        QVector<std::shared_ptr<Data::Source>> missions_;
 
 };
 

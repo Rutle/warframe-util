@@ -6,24 +6,21 @@ Enemy::Enemy()
 
 }
 
-Enemy::Enemy(const QString &id, const QString &name, const ENTITY &type)
+Enemy::Enemy(const QString &id, const QString &name, const SOURCETYPE &type,
+             const QString &modDropC, const QString &rarity,
+             const QString &chance):
+    id_{id}, name_{name}, type_{type}, modDropChance_{modDropC}, rarity_{rarity},
+    chance_{chance}
 {
 
 }
 
-void Enemy::setStats(const double &modDropChance, const QString &rarity, const double &chance)
-{
-    modDropChance_ = modDropChance;
-    rarity_ = rarity;
-    chance_ = chance;
-}
-
-QVariant Enemy::getData() const
+QVariant Enemy::getData()
 {
     QStringList tmp;
-    tmp << getName();
+    tmp << name_;
     tmp << rarity_;
-    tmp << QString::number(chance_);
+    tmp << chance_;
     return QVariant(tmp);
 }
 }   // Data

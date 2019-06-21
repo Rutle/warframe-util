@@ -10,7 +10,10 @@ class Mission: public Source
 {
     public:
         Mission();
-        QVariant getData() const;
+        QVariant getData();
+        const QString &getName() const;
+        const DROPTYPE &getType() const;
+        const QString &getId() const;
 };
 }
 }

@@ -10,7 +10,6 @@ class DataReader: public Interface::DataReaderInterface
 {
     public:
         DataReader();
-        //~DataReader();
         bool getData(QJsonDocument &data, QString &msg);
 
     private:

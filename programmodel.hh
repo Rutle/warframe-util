@@ -3,6 +3,7 @@
 
 #include "programmodelinterface.hh"
 #include "mod.hh"
+//#include "drop.hh"
 #include "relic.hh"
 #include "prime.hh"
 #include <QJsonObject>
@@ -22,7 +23,7 @@ class ProgramModel: public Interface::ProgramModelInterface
         ~ProgramModel();
         void setReader(Interface::DataReaderInterface *reader);
         bool readData(QString &msg);
-        std::shared_ptr<QVector<Data::Mod>> getModData() const;
+        std::shared_ptr<QVector<std::shared_ptr<Data::Mod>>> getModData() const;
         std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> getPrimeData() const;
         const QStringList &getSelectedCats() const;
     private:
@@ -37,10 +38,11 @@ class ProgramModel: public Interface::ProgramModelInterface
         QJsonDocument fullData_;
         QStringList dataKeys_;
         QStringList selectedCats_;
-        QVector<Data::Mod> mods_;
+
+        QVector<std::shared_ptr<Data::Mod>> mods_;
         QVector<std::shared_ptr<Data::Relic>> relics_;
         QVector<std::shared_ptr<Data::Prime> > primes_;
-        QVector<std::shared_ptr<Data::DataEntity>> data_;
+        //QVector<std::shared_ptr<Data::DataEntity>> data_;
         QMap<QString, std::shared_ptr<Data::Prime>> primeLookUp_;
 
 

@@ -25,16 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        Data/mod.cc \
+        data/mod.cc \
         data/dataentity.cc \
-        data/drop.cc \
         data/enemy.cc \
         data/misc.cc \
         data/mission.cc \
         data/prime.cc \
         data/relic.cc \
         data/relicsource.cc \
-        data/source.cc \
         datareader.cc \
         main.cc \
         mainwindow.cc \
@@ -46,8 +44,8 @@ SOURCES += \
         widgets/searchproxymodel.cc
 
 HEADERS += \
-        Data/dataentity.hh \
-        Data/mod.hh \
+        data/dataentity.hh \
+        data/mod.hh \
         data/drop.hh \
         data/enemy.hh \
         data/misc.hh \

@@ -18,7 +18,7 @@ class ProgramModelInterface {
 
         virtual bool readData(QString &msg) = 0;
 
-        virtual std::shared_ptr<QVector<Data::Mod>> getModData() const = 0;
+        virtual std::shared_ptr<QVector<std::shared_ptr<Data::Mod>>> getModData() const = 0;
 
         virtual std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> getPrimeData() const = 0;
 
