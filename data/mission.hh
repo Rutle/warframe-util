@@ -12,8 +12,12 @@ class Mission: public Source
         Mission();
         QVariant getData();
         const QString &getName() const;
-        const DROPTYPE &getType() const;
+        const SOURCETYPE &getType() const;
         const QString &getId() const;
+    private:
+        QString name_;
+        SOURCETYPE type_;
+        QString id_;
 };
 }
 }

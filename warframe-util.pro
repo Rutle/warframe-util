@@ -25,8 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        data/drop.cc \
         data/mod.cc \
-        data/dataentity.cc \
         data/enemy.cc \
         data/misc.cc \
         data/mission.cc \
@@ -44,7 +44,6 @@ SOURCES += \
         widgets/searchproxymodel.cc
 
 HEADERS += \
-        data/dataentity.hh \
         data/mod.hh \
         data/drop.hh \
         data/enemy.hh \

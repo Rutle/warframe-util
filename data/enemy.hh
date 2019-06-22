@@ -17,7 +17,7 @@ class Enemy : public Source
               const QString &chance);
         QVariant getData();
         const QString &getName() const;
-        const DROPTYPE &getType() const;
+        const SOURCETYPE &getType() const;
         const QString &getId() const;
 
     private:

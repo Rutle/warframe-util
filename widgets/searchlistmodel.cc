@@ -19,7 +19,7 @@ SearchListModel::SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::P
     //emit modelReset();
 }
 */
-SearchListModel::SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::Drop>>> drops, QObject *parent)
+SearchListModel::SearchListModel(const QVector<std::shared_ptr<Data::Drop>> &drops, QObject *parent)
 {
     drops_ = drops;
 }
@@ -46,7 +46,7 @@ int SearchListModel::rowCount(const QModelIndex &parent) const
         return primes_->size();
     }
     */
-    return drops_->size();
+    return drops_.size();
 
 }
 
@@ -72,7 +72,7 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
                 list << primes_->at(index.row())->getName();
             }
             */
-            list << drops_->at(index.row())->getName();
+            list << drops_.at(index.row())->getName();
             //list << viewers_str;
             //list << channels_str;
             return QVariant(list);
@@ -85,8 +85,8 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
                 return QVariant(primes_->at(index.row())->getRelics());
             }
             */
-            return QVariant(drops_->at(index.row())->getSources(
-                                Data::SOURCETYPE::ALLSOURCE));
+            return QVariant(drops_.at(index.row())->getSources(
+                                Data::SOURCETYPE::ENEMYSOURCE));
         }
 
     }

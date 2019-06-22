@@ -1,16 +1,17 @@
 #include "relic.hh"
 namespace Program {
 namespace Data {
-Relic::Relic() {
+Relic::Relic(): Drop(QString(), QString(), DROPTYPE::UNDEFINED)
+{
 
 }
 Relic::Relic(const QString &id, const QString &name, const DROPTYPE &type,
              const QString &tier):
-    id_{id}, name_{name}, type_{type}, tier_{tier}
+    Drop(id, name, type), tier_{tier}
 {
 
 }
-
+/*
 QList<QVariant> Relic::getSources(SOURCETYPE type)
 {
     switch (type) {
@@ -69,7 +70,7 @@ const QString &Relic::getId() const
 {
     return id_;
 }
-/*
+
 QVariant Relic::getData() const
 {
     QStringList tmp;

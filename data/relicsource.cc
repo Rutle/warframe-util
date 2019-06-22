@@ -22,7 +22,21 @@ QVariant RelicSource::getData()
     tmp << tier_;
     tmp << rarity_;
     tmp << chance_;
-
     return QVariant(tmp);
+}
+
+const QString &RelicSource::getName() const
+{
+    return name_;
+}
+
+const SOURCETYPE &RelicSource::getType() const
+{
+    return type_;
+}
+
+const QString &RelicSource::getId() const
+{
+    return id_;
 }
 }}

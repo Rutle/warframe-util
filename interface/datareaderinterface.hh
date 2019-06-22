@@ -11,7 +11,7 @@ class DataReaderInterface
         DataReaderInterface() = default;
         virtual ~DataReaderInterface() = default;
 
-        virtual bool getData(QJsonDocument &data, QString &msg) = 0;
+        virtual bool getData(QJsonObject &data, QString &msg) = 0;
 };
 
 }

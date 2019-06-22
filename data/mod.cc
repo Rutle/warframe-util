@@ -1,18 +1,18 @@
 #include "mod.hh"
 namespace Program {
 namespace Data {
-
-Mod::Mod(): id_{QString()}, name_{QString()},
+/*
+Mod::Mod(): Drop(QString(), QString(), DROPTYPE::UNDEFINED)
 {
 
 }
-
+*/
 Mod::Mod(const QString &id, const QString &name, const DROPTYPE &type):
-    id_{id}, name_{name}, type_{type}
+    Drop(id, name, type)
 {
 
 }
-
+/*
 bool Mod::addSource(std::shared_ptr<Source> loc, SOURCETYPE type)
 {
     switch (type) {
@@ -87,6 +87,6 @@ const QString &Mod::getId() const
 {
     return id_;
 }
-
+*/
 }   // Data
 }   // Program

@@ -4,16 +4,17 @@ namespace Program {
 namespace Data {
 
 
-Prime::Prime()
+Prime::Prime(): Drop(QString(), QString(), DROPTYPE::UNDEFINED)
 {
 
 }
 
-Prime::Prime(const QString &id, const QString &name, const DROPTYPE &type)
+Prime::Prime(const QString &id, const QString &name, const DROPTYPE &type):
+    Drop(id, name, type)
 {
 
 }
-
+/*
 bool Prime::addSource(std::shared_ptr<Source> loc, SOURCETYPE type)
 {
     switch (type) {
@@ -49,21 +50,6 @@ QList<QVariant> Prime::getSources(SOURCETYPE type)
     qDebug() << "get Relics: " << relics_.size();
     return tmp;
 }
-
-QStringList Prime::getDetails() const
-{
-
-}
-
-int Prime::getSourceCount(SOURCETYPE type) const
-{
-
-}
-
-const QString &Prime::getName() const
-{
-    return name_;
-}
-
+*/
 } // Data
 } // Program

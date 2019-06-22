@@ -3,6 +3,7 @@
 
 #include "datareaderinterface.hh"
 #include <QJsonObject>
+//#include <QJsonDocument>
 
 namespace Program {
 
@@ -10,10 +11,10 @@ class DataReader: public Interface::DataReaderInterface
 {
     public:
         DataReader();
-        bool getData(QJsonDocument &data, QString &msg);
+        bool getData(QJsonObject &data, QString &msg);
 
     private:
-        bool readData(QJsonDocument &data, QString &msg);
+        bool readData(QJsonObject &data, QString &msg);
 
         // Mod -> enemies[],
 

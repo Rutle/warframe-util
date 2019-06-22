@@ -19,7 +19,7 @@ class SearchListModel : public QAbstractListModel
         SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> primes,
                       QObject *parent = nullptr);
         */
-        SearchListModel(std::shared_ptr<QVector<std::shared_ptr<Data::Drop>>> primes,
+        SearchListModel(const QVector<std::shared_ptr<Data::Drop>> &drops,
                       QObject *parent = nullptr);
         // Header:
         QVariant headerData(int section, Qt::Orientation orientation,
@@ -34,7 +34,8 @@ class SearchListModel : public QAbstractListModel
         QString type_;
         //std::shared_ptr<QVector<Data::Mod>> mods_;
         //std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> primes_;
-        std::shared_ptr<QVector<std::shared_ptr<Data::Drop>>> drops_;
+        QVector<std::shared_ptr<Data::Drop>> drops_;
+        //std::shared_ptr<QVector<std::shared_ptr<Data::Drop>>> drops_;
 };
 }
 #endif // SearchListModel_HH

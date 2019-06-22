@@ -4,7 +4,8 @@
 #include "datareaderinterface.hh"
 #include "mod.hh"
 #include "prime.hh"
-#include "dataentity.hh"
+#include "drop.hh"
+//#include "dataentity.hh"
 #include <QStringList>
 namespace Program {
 namespace Interface {
@@ -18,9 +19,9 @@ class ProgramModelInterface {
 
         virtual bool readData(QString &msg) = 0;
 
-        virtual std::shared_ptr<QVector<std::shared_ptr<Data::Mod>>> getModData() const = 0;
+        virtual const QVector<std::shared_ptr<Data::Drop>> &getModData() = 0;
 
-        virtual std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> getPrimeData() const = 0;
+        virtual const QVector<std::shared_ptr<Data::Drop>> &getPrimeData() = 0;
 
         // Categories selected
         virtual const QStringList& getSelectedCats() const = 0;

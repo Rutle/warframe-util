@@ -1,8 +1,9 @@
 #include "programmodel.hh"
 #include "mod.hh"
 #include "relic.hh"
+#include "enemy.hh"
 #include "relicsource.hh"
-#include "dataentity.hh"
+//#include "dataentity.hh"
 #include <QDebug>
 #include <QMap>
 #include <QJsonArray>
@@ -12,12 +13,12 @@ const QMap<DataCategories, QString> CATEGORIES = {
     {BlueprintSources,"blueprintSources"}, {CetusBountyRewards,"cetusBountyRewards"},
     {EnemyBlueprintTables,"enemyBlueprintTables"}, {EnemyModTables,"enemyModTables"},
     {KeyRewards,"keyRewards"}, {MiscItems,"miscItems"},
-    {MissionRewards,"missionRewards"}, {ModSources,"modSources"},
+    {MissionRewards,"missionRewards"}, {ModSources,"modLocations"},
     {Relics,"relics"}, {SortieRewards,"sortieRewards"},
     {TransientRewards,"transientRewards"},
 };
 const QMap<QString, QString> CATTOKEY = {
-    {"Mods", "modSources"}, {"Primes", "relics"}
+    {"Mods", "modLocations"}, {"Primes", "relics"}
 };
 ProgramModel::ProgramModel():
     reader_{nullptr}
@@ -41,11 +42,7 @@ void ProgramModel::setReader(Interface::DataReaderInterface *reader)
 bool ProgramModel::readData(QString &msg)
 {
     if(!reader_->getData(fullData_, msg)) {
-        //qDebug() << "ProgramModel message after: " << msg;
-        return false;
-    }
-    if(fullData_.isNull()) {
-        msg = "Data was not loaded.";
+        qDebug() << "ProgramModel message after: " << msg;
         return false;
     }
     if(!checkKeys()) {
@@ -56,17 +53,14 @@ bool ProgramModel::readData(QString &msg)
     return true;
 }
 
-std::shared_ptr<QVector<std::shared_ptr<Data::Mod>>> ProgramModel::getModData() const
+const QVector<std::shared_ptr<Data::Drop>> &ProgramModel::getModData()
 {
-    return std::make_shared<QVector<std::shared_ptr<Data::Mod>>>(mods_);
+    return mods_;
 }
 
-std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> ProgramModel::getPrimeData() const
+const QVector<std::shared_ptr<Data::Drop>> &ProgramModel::getPrimeData()
 {
-    qDebug() << "Primes: ";
-    //qDebug() << primes_.at(0)->getName();
-    qDebug() << primes_.size();
-    return std::make_shared<QVector<std::shared_ptr<Data::Prime>>>(primes_);
+    return primes_;
 }
 
 const QStringList &ProgramModel::getSelectedCats() const
@@ -76,34 +70,22 @@ const QStringList &ProgramModel::getSelectedCats() const
 
 void ProgramModel::parseData()
 {
-    //QString category{CATEGORIES.value(cat)};
-    //qDebug() << category;
-    //qDebug() << fullData_.object().size();
-    // Do not use QJsonArray tmp{} <- brackets. Does not work properly.
-
-    //qDebug() << tmpData.size();
-    //qDebug() << tmpData.at(0).toObject().value("_id").toString();
-    //qDebug() << tmpData.at(0).toObject().value("enemies").toArray().size();
-    //QJsonArray tmpData = fullData_.object().value(category).toArray();
-    // _id string of the first mod
-    //selectedDataKeys_.contains();
     if(selectedCats_.contains("Mods")) {
-        addMods(fullData_.object().value(CATTOKEY.value("Mods")).toArray());
+
+        addMods(fullData_.value(CATTOKEY.value("Mods")).toArray());
     }
+    /*
     if(selectedCats_.contains("Primes")) {
         addRelics(fullData_.object().value(CATTOKEY.value("Primes")).toArray());
     }
-    //Data::Prime *tmp = new Data::Prime;
-    //tmp->
-    qDebug() << mods_.size();
-    qDebug() << primes_.size();
-    //qDebug() << primes_.at(0)->getName();
+    */
+
 
 }
 
 bool ProgramModel::checkKeys()
 {
-    QStringList keys{fullData_.object().keys()};
+    QStringList keys{fullData_.keys()};
     qDebug() << "keys: " << keys;
     if(!keys.isEmpty()) {
         dataKeys_ = keys;
@@ -118,7 +100,6 @@ void ProgramModel::addMods(const QJsonArray &arr)
         QString name{item.toObject().value("modName").toString()};
         QString id{item.toObject().value("_id").toString()};
         QJsonArray enemies = item.toObject().value("enemies").toArray();
-
         auto tmp{std::make_shared<Data::Mod>(
                         id, name, Data::DROPTYPE::MODDROP)};
 
@@ -126,9 +107,8 @@ void ProgramModel::addMods(const QJsonArray &arr)
             QString enemyId{enemy.toObject().value("_id").toString()};
             QString enemyName{enemy.toObject().value("enemyName").toString()};
             QString dropChance{enemy.toObject().value("enemyModDropChance").toString()};
-            QString chance{enemy.toObject().value("chance").toString()};
+            QString chance{QString::number(enemy.toObject().value("chance").toDouble())};
             QString rarity{enemy.toObject().value("rarity").toString()};
-
             auto tmpE{std::make_shared<Data::Enemy>(
                             enemyId, enemyName, Data::SOURCETYPE::ENEMYSOURCE,
                             dropChance, rarity, chance)};

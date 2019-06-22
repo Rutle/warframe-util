@@ -17,7 +17,7 @@ class RelicSource: public Source
                     const QString &tier, SOURCETYPE type);
         QVariant getData();
         const QString &getName() const;
-        const DROPTYPE &getType() const;
+        const SOURCETYPE &getType() const;
         const QString &getId() const;
     private:
         QString chance_;

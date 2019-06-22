@@ -23,5 +23,20 @@ QVariant Enemy::getData()
     tmp << chance_;
     return QVariant(tmp);
 }
+
+const QString &Enemy::getName() const
+{
+    return name_;
+}
+
+const SOURCETYPE &Enemy::getType() const
+{
+    return type_;
+}
+
+const QString &Enemy::getId() const
+{
+    return id_;
+}
 }   // Data
 }   // Program

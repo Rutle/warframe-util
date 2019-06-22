@@ -23,8 +23,8 @@ class ProgramModel: public Interface::ProgramModelInterface
         ~ProgramModel();
         void setReader(Interface::DataReaderInterface *reader);
         bool readData(QString &msg);
-        std::shared_ptr<QVector<std::shared_ptr<Data::Mod>>> getModData() const;
-        std::shared_ptr<QVector<std::shared_ptr<Data::Prime>>> getPrimeData() const;
+        const QVector<std::shared_ptr<Data::Drop>> &getModData();
+        const QVector<std::shared_ptr<Data::Drop>> &getPrimeData();
         const QStringList &getSelectedCats() const;
     private:
         void parseData();
@@ -35,13 +35,13 @@ class ProgramModel: public Interface::ProgramModelInterface
         void setSignals();
         Interface::DataReaderInterface *reader_;
         // Settings *settings_;
-        QJsonDocument fullData_;
+        QJsonObject fullData_;
         QStringList dataKeys_;
         QStringList selectedCats_;
 
-        QVector<std::shared_ptr<Data::Mod>> mods_;
+        QVector<std::shared_ptr<Data::Drop>> mods_;
         QVector<std::shared_ptr<Data::Relic>> relics_;
-        QVector<std::shared_ptr<Data::Prime> > primes_;
+        QVector<std::shared_ptr<Data::Drop>> primes_;
         //QVector<std::shared_ptr<Data::DataEntity>> data_;
         QMap<QString, std::shared_ptr<Data::Prime>> primeLookUp_;
 

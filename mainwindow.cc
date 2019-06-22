@@ -48,7 +48,7 @@ void MainWindow::setProgram(Program::Interface::ProgramInterface *program)
 
 void MainWindow::updateData() // fetchData
 {
-    if(program_->getModel()->getModData() != nullptr) {
+    if(!program_->getModel()->getModData().isEmpty()) {
 
         for (auto cat : program_->getModel()->getSelectedCats()) {
             //Program::SearchListDelegate *delegate{new Program::SearchListDelegate()};
@@ -59,8 +59,8 @@ void MainWindow::updateData() // fetchData
                 model = new Program::SearchListModel(
                             program_->getModel()->getModData(), tmp);
             } else if(cat == "Primes") {
-                model = new Program::SearchListModel(
-                                program_->getModel()->getPrimeData(), tmp);
+                //model = new Program::SearchListModel(
+                //                program_->getModel()->getPrimeData(), tmp);
             }
             ui->catComboBox->addItem(cat);
             filterModel->setSourceModel(model);
