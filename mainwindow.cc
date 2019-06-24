@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->resultView->setModel(proxy);
     ui->resultView->setSortingEnabled(true);
     ui->resultView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
+    ui->resultView->setHidden(true);
     //QObject::connect(ui->catComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
     //                 ui->searchStackedWidget, &QStackedWidget::setCurrentIndex);
 
@@ -59,8 +59,8 @@ void MainWindow::updateData() // fetchData
                 model = new Program::SearchListModel(
                             program_->getModel()->getModData(), tmp);
             } else if(cat == "Primes") {
-                //model = new Program::SearchListModel(
-                //                program_->getModel()->getPrimeData(), tmp);
+                model = new Program::SearchListModel(
+                                program_->getModel()->getPrimeData(), tmp);
             }
             ui->catComboBox->addItem(cat);
             filterModel->setSourceModel(model);
@@ -92,9 +92,17 @@ void MainWindow::updateData() // fetchData
 
 void MainWindow::displaySelected(const QModelIndex &index)
 {
+    QList<QVariant> tmp2(index.data(Qt::UserRole).toMap().value("enemy").toList());
+    QList<QString> keys(index.data(Qt::UserRole).toMap().keys());
+
+    /* For now basic layout solution looks somewhat better. Keeping QTabView
+     *  solution in case I want to change.
     QList<QVariant> tmp(index.data(Qt::UserRole).toList());
-    qDebug() << tmp.at(0).toStringList().at(0); // First enemy that drops the mod.
-    qDebug() << tmp.size();
+
+    //qDebug() << tmp2.value("enemy").toList().at(0).toStringList().at(0);
+
+    qDebug() << tmp2.at(0).toStringList().at(0); // First enemy that drops the mod.
+    qDebug() << tmp2.size();
     // Instead of using layout I could take advantage of QListView here and
     // add sorting etc.
 
@@ -106,9 +114,9 @@ void MainWindow::displaySelected(const QModelIndex &index)
     resultModel_->setHeaderData(2, Qt::Horizontal, tr("Rarity:"));
     //resultModel_->setHeaderData(0, Qt::Horizontal, tr("Rarity"));
 
-    for (int idx = 0; idx < tmp.size(); ++idx) {
+    for (int idx = 0; idx < tmp2.size(); ++idx) {
         resultModel_->insertRow(idx);
-        QStringList sl{tmp.at(idx).toStringList()};
+        QStringList sl{tmp2.at(idx).toStringList()};
         qDebug() << sl;
         resultModel_->setData(resultModel_->index(idx, 0, QModelIndex()), sl.at(0));
         resultModel_->setData(resultModel_->index(idx, 1, QModelIndex()), sl.at(1));
@@ -119,13 +127,15 @@ void MainWindow::displaySelected(const QModelIndex &index)
     qDebug() << resultModel_->rowCount();
     ui->resultView->horizontalHeader()->setStretchLastSection(true);
     ui->resultView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    */
 
 
-    /*
     QWidget *baseWidget{new QWidget};
     QVBoxLayout *baseLayout{new QVBoxLayout};
     if (ui->catComboBox->currentText() == "Mods") {
         //QScrollArea *baseScrollArea{new QScrollArea};
+
+        // Add data based on key in keys:
         QGridLayout *labelLayout{new QGridLayout};
         QLabel *drop{new QLabel("Drop Source:")};
         drop->setContentsMargins(0, 0, 0, 5);
@@ -144,8 +154,17 @@ void MainWindow::displaySelected(const QModelIndex &index)
         //labelLayout->setSpacing(0);
         labelLayout->setVerticalSpacing(1);
         //baseFormLayout->setContentsMargins(0, 0, 0, 0);
-        for (int idx = 0; idx < tmp.size(); ++idx) {
-            QStringList sl{tmp.at(idx).toStringList()};
+
+        std::sort(tmp2.begin(), tmp2.end(),
+                  [](QVariant a, QVariant b){
+            return a.toStringList().at(2).toDouble() > b.toStringList().at(2).toDouble() ? true : false;
+            //return a.toStringList().toDouble() >= b.at(2).toDouble() ? true : false;
+            //return a.isOnline() ? true : false;
+
+        });
+
+        for (int idx = 0; idx < tmp2.size(); ++idx) {
+            QStringList sl{tmp2.at(idx).toStringList()};
             QLabel *name{new QLabel(sl.at(0))};
             name->setSizePolicy(QSizePolicy::Expanding,
                                      QSizePolicy::Minimum);
@@ -199,27 +218,8 @@ void MainWindow::displaySelected(const QModelIndex &index)
         //ui->resultHL->insertWidget(1, baseScrollArea);
     } else if (ui->catComboBox->currentText() == "Primes") {
 
-        resultModel_->removeRows(0, resultModel_->rowCount(QModelIndex()), QModelIndex());
-        //resultModel_->insertRows()
-        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
-        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Tier"));
-        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Chance"));
-        resultModel_->setHeaderData(0, Qt::Horizontal, tr("Rarity"));
-
-        for (int idx = 0; idx < tmp.size(); ++idx) {
-            QStringList sl{tmp.at(idx).toStringList()};
-            qDebug() << sl;
-            resultModel_->setData(resultModel_->index(idx+1, 0, QModelIndex()), sl.at(0));
-            resultModel_->setData(resultModel_->index(idx+1, 1, QModelIndex()), sl.at(1));
-            resultModel_->setData(resultModel_->index(idx+1, 2, QModelIndex()), sl.at(2));
-            resultModel_->setData(resultModel_->index(idx+1, 3, QModelIndex()), sl.at(3));
-
-        }
-        QWidget *tt{ui->resultSA->takeWidget()};
-        tt->deleteLater();
-        ui->resultSA->setWidget(resultView_);
     }
-    */
+
 }
 
 void MainWindow::setSignals()

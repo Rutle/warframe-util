@@ -74,11 +74,11 @@ void ProgramModel::parseData()
 
         addMods(fullData_.value(CATTOKEY.value("Mods")).toArray());
     }
-    /*
+
     if(selectedCats_.contains("Primes")) {
-        addRelics(fullData_.object().value(CATTOKEY.value("Primes")).toArray());
+        addRelics(fullData_.value(CATTOKEY.value("Primes")).toArray());
     }
-    */
+
 
 
 }

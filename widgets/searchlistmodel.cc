@@ -2,6 +2,7 @@
 #include "types.hh"
 #include <QStandardItem>
 #include <QDebug>
+
 namespace Program {
 /*
 SearchListModel::SearchListModel(std::shared_ptr<QVector<Data::Mod>> mods, QObject *parent):
@@ -85,8 +86,12 @@ QVariant SearchListModel::data(const QModelIndex &index, int role) const
                 return QVariant(primes_->at(index.row())->getRelics());
             }
             */
-            return QVariant(drops_.at(index.row())->getSources(
-                                Data::SOURCETYPE::ENEMYSOURCE));
+            QMap<QString, QVariant> tmp;
+            tmp.insert("enemy", QVariant(drops_.at(index.row())->getSources(
+                                             Data::SOURCETYPE::ENEMYSOURCE)));
+            return QVariant(tmp);
+            //return QVariant(drops_.at(index.row())->getSources(
+             //                   Data::SOURCETYPE::ENEMYSOURCE));
         }
 
     }
