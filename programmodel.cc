@@ -157,9 +157,9 @@ void ProgramModel::addRelics(const QJsonArray &arr)
                                     chance, rarity, relicId, relicName,
                                     relicTier, Data::SOURCETYPE::RELICSOURCE),
                                 Data::SOURCETYPE::RELICSOURCE);
-                    qDebug() << "Exists already: "
-                             << primeLookUp_.value(primeId)->getSourceCount(
-                                    Data::SOURCETYPE::RELICSOURCE);
+                    //qDebug() << "Exists already: "
+                    //         << primeLookUp_.value(primeId)->getSourceCount(
+                    //                Data::SOURCETYPE::RELICSOURCE);
                 }
                 /*
                 int idx{primes_.indexOf(tmpPrime)};

@@ -10,18 +10,23 @@ enum class DROPTYPE { UNDEFINED, MODDROP, RELICDROP, PRIMEDROP, MISCDROP };
 enum class SOURCETYPE { UNDEFINED, ALLSOURCE, MISSIONSOURCE, ENEMYSOURCE,
                         RELICSOURCE };
 
-const QMap<QString, SOURCETYPE> MODDROPSOURCES{
+const QMap<QString, SOURCETYPE> MODDROPSOURCES {
     {"enemy", SOURCETYPE::ENEMYSOURCE}, {"mission", SOURCETYPE::MISSIONSOURCE}
 };
 
-const QMap<QString, SOURCETYPE> RELICDROPSOURCES{
+const QMap<QString, SOURCETYPE> RELICDROPSOURCES {
     {"mission", SOURCETYPE::MISSIONSOURCE}
 };
-const QMap<QString, SOURCETYPE> PRIMEDROPSOURCES{
+const QMap<QString, SOURCETYPE> PRIMEDROPSOURCES {
     {"relic", SOURCETYPE::RELICSOURCE}
 };
-const QMap<QString, SOURCETYPE> MISCDROPSOURCES{
+const QMap<QString, SOURCETYPE> MISCDROPSOURCES {
     {"enemy", SOURCETYPE::ENEMYSOURCE}, {"mission", SOURCETYPE::MISSIONSOURCE}
+};
+
+const QMap<QString, QStringList> HEADERS {
+    {"enemy", QStringList() << "Enemy Source:" << "Drop Chance:" << "Rarity:"},
+    {"mission", QStringList() << "Location:" << "Mission type:" << "Rotation" << "Chance" << "Rarity:"},
 };
 }
 }

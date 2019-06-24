@@ -19,8 +19,8 @@ QVariant Enemy::getData()
 {
     QStringList tmp;
     tmp << name_;
-    tmp << rarity_;
     tmp << chance_;
+    tmp << rarity_;
     return QVariant(tmp);
 }
 

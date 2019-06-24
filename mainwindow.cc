@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "searchlistdelegate.hh"
 #include "searchproxymodel.hh"
+#include "widgetfactory.hh"
 #include <QStandardItemModel>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     proxy->setSourceModel(resultModel_);
     ui->resultView->setModel(proxy);
     ui->resultView->setSortingEnabled(true);
+    ui->resultSA->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     ui->resultView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     ui->resultView->setHidden(true);
     //QObject::connect(ui->catComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -49,7 +51,6 @@ void MainWindow::setProgram(Program::Interface::ProgramInterface *program)
 void MainWindow::updateData() // fetchData
 {
     if(!program_->getModel()->getModData().isEmpty()) {
-
         for (auto cat : program_->getModel()->getSelectedCats()) {
             //Program::SearchListDelegate *delegate{new Program::SearchListDelegate()};
             QListView *tmp{new QListView()};
@@ -74,16 +75,6 @@ void MainWindow::updateData() // fetchData
             // data display on right side of the QListView.
             QObject::connect(tmp, &QListView::clicked,
                              this, &MainWindow::displaySelected);
-            /*
-            QObject::connect(tmp, &QListView::clicked,
-                             [=](const QModelIndex &index){
-                //QModelIndex itemIdx = searchListViews_.value(text1)->currentIndex();
-                QList<QVariant> tmp(index.data(Qt::UserRole).toList());
-                qDebug() << tmp.at(0).toStringList().at(0); // First enemy that drops the mod.
-
-
-
-                });*/
         }
         setSignals();
 
@@ -92,8 +83,7 @@ void MainWindow::updateData() // fetchData
 
 void MainWindow::displaySelected(const QModelIndex &index)
 {
-    QList<QVariant> tmp2(index.data(Qt::UserRole).toMap().value("enemy").toList());
-    QList<QString> keys(index.data(Qt::UserRole).toMap().keys());
+
 
     /* For now basic layout solution looks somewhat better. Keeping QTabView
      *  solution in case I want to change.
@@ -129,14 +119,22 @@ void MainWindow::displaySelected(const QModelIndex &index)
     ui->resultView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     */
 
+    //QList<QVariant> tmp2(index.data(Qt::UserRole).toMap().value("enemy").toList());
+    //QMap<QString, QVariant> tmpMap2(index.data(Qt::UserRole).toMap());
+    //QList<QString> keys(index.data(Qt::UserRole).toMap().keys());
 
-    QWidget *baseWidget{new QWidget};
-    QVBoxLayout *baseLayout{new QVBoxLayout};
+    //QWidget *baseWidget{new QWidget};
+    //QVBoxLayout *baseLayout{new QVBoxLayout};
+
+    /*
     if (ui->catComboBox->currentText() == "Mods") {
         //QScrollArea *baseScrollArea{new QScrollArea};
-
-        // Add data based on key in keys:
+        // QWidget *tmp{Program::WidgetFactory::addResultWidget("Mods", tmpMap, bool sort?)}
         QGridLayout *labelLayout{new QGridLayout};
+        // Add data based on key in keys:
+
+
+
         QLabel *drop{new QLabel("Drop Source:")};
         drop->setContentsMargins(0, 0, 0, 5);
         QLabel *chance{new QLabel("Drop Chance:")};
@@ -151,26 +149,23 @@ void MainWindow::displaySelected(const QModelIndex &index)
         line->setFrameShadow(QFrame::Sunken);
         line->setContentsMargins(0, 0, 0, 0);
         labelLayout->addWidget(line, 1, 0, 1, 3);
-        //labelLayout->setSpacing(0);
         labelLayout->setVerticalSpacing(1);
-        //baseFormLayout->setContentsMargins(0, 0, 0, 0);
 
         std::sort(tmp2.begin(), tmp2.end(),
                   [](QVariant a, QVariant b){
             return a.toStringList().at(2).toDouble() > b.toStringList().at(2).toDouble() ? true : false;
-            //return a.toStringList().toDouble() >= b.at(2).toDouble() ? true : false;
-            //return a.isOnline() ? true : false;
-
         });
 
         for (int idx = 0; idx < tmp2.size(); ++idx) {
+            //addRow(Layout, QStringList, type/key)
+
             QStringList sl{tmp2.at(idx).toStringList()};
+            //Program::WidgetFactory::addResultRow(labelLayout, idx+2, sl, key);
             QLabel *name{new QLabel(sl.at(0))};
             name->setSizePolicy(QSizePolicy::Expanding,
                                      QSizePolicy::Minimum);
             name->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
             name->setMinimumHeight(20);
-            //name->setMaximumHeight(30);
             name->setContentsMargins(0, 0, 0, 0);
 
             QLabel *chance{new QLabel(sl.at(2))};
@@ -178,16 +173,13 @@ void MainWindow::displaySelected(const QModelIndex &index)
                                      QSizePolicy::Minimum);
             chance->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
             chance->setMinimumHeight(20);
-            //name->setMaximumHeight(30);
             chance->setContentsMargins(0, 0, 0, 0);
             QLabel *rarity{new QLabel(sl.at(1))};
             rarity->setSizePolicy(QSizePolicy::Expanding,
                                      QSizePolicy::Minimum);
             rarity->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
             rarity->setMinimumHeight(20);
-            //name->setMaximumHeight(30);
             rarity->setContentsMargins(0, 0, 0, 0);
-
 
             labelLayout->addWidget(name, idx+2, 0);
             labelLayout->addWidget(chance, idx+2, 1);
@@ -212,26 +204,31 @@ void MainWindow::displaySelected(const QModelIndex &index)
         //}
         //baseLayout->addWidget(baseScrollArea);
         //baseWidget->setLayout(baseLayout);
-        QWidget *tt{ui->resultSA->takeWidget()};
-        tt->deleteLater();
-        ui->resultSA->setWidget(baseWidget);
-        //ui->resultHL->insertWidget(1, baseScrollArea);
+
     } else if (ui->catComboBox->currentText() == "Primes") {
 
-    }
+    }*/
+    QWidget *tt{ui->resultSA->takeWidget()};
+    tt->deleteLater();
+    QMap<QString, QVariant> tmpMap(index.data(Qt::UserRole).toMap());
+    QWidget *base{Program::WidgetFactory::addResultWidget(
+                    ui->catComboBox->currentText(),
+                    tmpMap)};
+    ui->resultSA->setWidget(base);
+    //ui->resultHL->insertWidget(1, baseScrollArea);
 
 }
 
 void MainWindow::setSignals()
 {
-    /*
+
     // Connect signal from search field to filter slot on filter model.
     QObject::connect(ui->searchEdit, &QLineEdit::textChanged,
                      [=](const QString &newValue){
                          comboCats_.value("Mods")->setFilterRegExp(
                                      QRegExp(newValue, Qt::CaseInsensitive));
                          });
-                         */
+
     // Connect combobox' selected text signal to switch the page on
     // stacked widget to the selected category.
     QObject::connect(ui->catComboBox,

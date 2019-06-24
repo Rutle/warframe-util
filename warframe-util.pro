@@ -41,7 +41,8 @@ SOURCES += \
         widgets/primelistmodel.cc \
         widgets/searchlistdelegate.cc \
         widgets/searchlistmodel.cc \
-        widgets/searchproxymodel.cc
+        widgets/searchproxymodel.cc \
+        widgets/widgetfactory.cc
 
 HEADERS += \
         data/mod.hh \
@@ -64,7 +65,8 @@ HEADERS += \
         widgets/primelistmodel.hh \
         widgets/searchlistdelegate.hh \
         widgets/searchlistmodel.hh \
-        widgets/searchproxymodel.hh
+        widgets/searchproxymodel.hh \
+        widgets/widgetfactory.hh
 
 FORMS += \
         mainwindow.ui
